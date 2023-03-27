@@ -1,0 +1,41 @@
+---
+title: "Effect of Truth-in-Sentencing on Incarceration Rate"
+subtitle: "CUNY Data608 Final Project"
+author: "Michael Ippolito"
+date: "2023-03-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Before the 1990s, many prisoners incarcerated in the US criminal justice system only served a fraction of their sentence, often being released for good behavior or other mitigating factors. These factors were applied unevenly at the discretion of parole boards. Public pressure led to the passage of the Violent Crime Control and Enforcement Act (VCCEA) in 1994, which gave incentives to states that required prisoners to serve at least 85% of their sentence.
+
+The arguments leading to the VCCEA included that truth in sentencing (TIS) laws would deter future criminal behavior, would render justice to the perpetrator for the crime commited, and that time served would theoretically be unbiased at the whim of a parole board. Opponents of TIS argue that TIS leads to prison overcrowding, that the cost of incarcerating prisoners longer could be better spent on crime prevention programs, that it disincentivizes good behavior, and that it in fact does not serve as a deterrent to future crime. Further, it leaves judges no room in weighing extenuating factors when rendering a sentence.
+
+My project will seek to evaluate whether TIS laws impact the incarceration rate, and whether other factors may be at play. The data source I'll be using comes from the Inter-university Consortium for Political and Social Research (ICPSR), a consortium of almost 800 institutions contributing and sharing data on a wide array of social and behavioral science topics. The data is linked here:
+
+https://www.icpsr.umich.edu/web/NACJD/studies/4456
+
+While the data was collected from 1972 to 2002, it is still relevant as TIS laws are still on the books in the U.S. Using an interactive Dash app deployed via Heroku, I plan on showing how the incarceration rate changes based on the extent to which each U.S. state enforces TIS, whether mandatory "enhancements" to sentences affect the rate, and whether any non-judiciary factors (e.g. poverty rate) might also have an effect on the rate.
+
+
+### References
+
+Stemen, D. _Impact of State Sentencing Policies on Incarceration Rates in the United States, 1975-2002 (ICPSR 4456)._ (2007, September 27). Inter-university Consortium for Political and Social Research. https://www.icpsr.umich.edu/web/NACJD/studies/4456
+
+Ditton, P., Wilson, D. & BJS Statisticians. _Truth in Sentencing in State Prisons._ (1999, January). Bureau of Justice. https://bjs.ojp.gov/content/pub/pdf/tssp.pdf
+
+Shorey, J. _Truth in Sentencing Overview & Laws._ (2022, May 4). Study.com. https://study.com/learn/lesson/truth-in-sentencing-overview-laws.html
+
+_State Good Time and Earned Time Laws (2021, June 11)._ National Conference of State Legislatures. https://www.ncsl.org/civil-and-criminal-justice/state-good-time-and-earned-time-laws
+
+_Know More: Truth-in-Sentencing._ (2020). Restore Justice Foundation. https://www.restorejustice.org/about-us/resources/know-more/know-more-truth-in-sentencing/
+
+
+```{r}
+
+```

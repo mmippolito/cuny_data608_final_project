@@ -1,0 +1,70 @@
+intro
+list the benefits of FL and early FL acquisition, ask where the US stands compared to the rest of the world
+	https://www.leadwithlanguages.org/why-learn-languages/early-childhood-elementary/
+	https://files.eric.ed.gov/fulltext/ED328083.pdf
+
+use FLE report pdf 2017 to show stats on percentage of schools that offer FL programs in k-12
+	https://www.americancouncils.org/sites/default/files/FLE-report-June17.pdf (p 26 for k-8)
+show the number of 9-12 students taking a FL
+	https://nces.ed.gov/programs/digest/d09/tables/dt09_056.asp
+possibly use FLE K-8 data to extrapolate from the 400 schools surveyed to estimate K-8 FL programs offered nationwide
+	https://nces.ed.gov/programs/digest/d09/tables/dt09_034.asp
+	https://nces.ed.gov/programs/digest/d09/tables/dt09_035.asp
+use the foreign language learning statistics xlsx sheet to show the pct of primary, middle, and secondary students enrolled in FL programs in Europe
+	https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Foreign_language_learning_statistics
+
+other ideas
+show the pcts of US students taking FLs over time
+show how rates of FL offerings differ based on income level of school districts
+	https://www.census.gov/data.html
+	https://nces.ed.gov/programs/digest/2009menu_tables.asp
+
+-------------------------------------------------------
+
+benefits of early foreign language acquisition:
+
+same regions of brain they use to acquire native language
+proven to contributes to cognitive development
+helps in many areas: ability to think and listen critically, to solve problems
+improves memory, concentration, multitasking
+have higher standardized test scores
+more prone to exhibit tolerence and sensitivity to other cultures
+
+-------------------------------------------------------
+-------------------------------------------------------
+-------------------------------------------------------
+
+truth in sentencing
+
+Amount of time served 44% in 1996 (avg 30 months)
+Parole boards decided when they could be released, not applied consistently
+Public pressure to enforce full sentences
+Bill Clinton signed truth-in-sentencing laws into effect in 1994 with the Violent Crime Control and Enforcement Act
+
+argument for:
+deterrent
+justice for criminal
+no bias; everyone gets same sentence
+
+argument against:
+prison overcrowding
+cost of incarcerating prisoners longer
+extra cost could be spent on prevention programs
+lack of incentive/positive reinforcement for good behaviour
+
+data:
+https://www.icpsr.umich.edu/web/NACJD/studies/4456
+https://www.icpsr.umich.edu/web/NACJD/studies/4456/versions/V1/download/delimited?path=/pcms/studies/0/0/4/4/04456/V1
+
+truth in sentencing:
+https://bjs.ojp.gov/content/pub/pdf/tssp.pdf
+https://study.com/learn/lesson/truth-in-sentencing-overview-laws.html
+https://www.restorejustice.org/about-us/resources/know-more/know-more-truth-in-sentencing/
+
+
+--------------------------
+
+other good project topic:
+Monitoring the Future - survey of hs seniors from 1983-present
+https://www.icpsr.umich.edu/web/NACJD/search/studies?start=0&sort=score%20desc%2CTITLE_SORT%20asc&CLASSIF_FACET=NACJD.XI.&ARCHIVE=NACJD&PUBLISH_STATUS=PUBLISHED&rows=50&q=monitoring%20the%20future
+https://www.icpsr.umich.edu/web/NACJD/studies/38503#

@@ -1,0 +1,84 @@
+File Manifest for ICPSR 4456
+
+Stemen, Don. IMPACT OF STATE SENTENCING POLICIES ON INCARCERATION RATES IN
+THE UNITED STATES, 1975-2002. ICPSR04456-v1. New York, NY: Vera Institute
+of Justice [producer], 2000. Ann Arbor, MI: Inter-university Consortium for
+Political and Social Research [distributor], 2007-09-27.
+http://doi.org/10.3886/ICPSR04456.v1
+
+
+Study-level Documentation
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    04456-descriptioncitation.pdf       -       -         -       2020-01-24  -
+
+    04456-related_literature.txt        -       -         -       daily       -
+
+    04456-manifest.txt                  -       -         -       daily       -
+
+    04456-Questionnaire.pdf             -       -         -       2007-09-27  2f797af21d13a38e91b5c407b9e0cb3d
+
+    04456-User_guide.pdf                -       -         -       2007-09-27  0e9668603524430c51e169a12320d155
+
+
+DS0001 Primary Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    04456-0001-Codebook.pdf             -       -         -       2007-09-27  132976c7d2070470c54554345a2ada17
+
+    04456-0001-Data.dta                 -       550       298     2007-09-27  f122b0815c53f8bb15f601bff620519b
+
+    04456-0001-Data.sav                 -       550       298     2007-09-27  05830d6269ad464c64075a99f1c8c72b
+
+    04456-0001-Data.stc                 -       550       298     2007-09-27  6ca0083dd90a743e24b60ff15a162dff
+
+    04456-0001-Data.tsv                 -       550       298     2007-09-27  56e8427eb1fd5602ed6891bf23df94c6
+
+    04456-0001-Data.txt                 1144    550       298     2007-09-27  f7e02db4c3cb573f892535802ad05587
+
+    04456-0001-Setup.dct                -       -         -       2007-09-27  c1d7dff613a2f305845a62ac5fe3114b
+
+    04456-0001-Setup.do                 -       -         -       2007-09-27  1a188ed35f6a24bf063a77e404e637b3
+
+    04456-0001-Setup.sas                -       -         -       2007-09-27  2fe2cda47d5e47ecdca922593ea68561
+
+    04456-0001-Setup.sps                -       -         -       2007-09-27  47a0d0c9c28eb92aafa89be77eb1e58c
+
+    04456-0001-Supplemental_syntax.do   -       -         -       2007-09-27  df4f6cceb4436126a430d492ae7442d0
+
+    04456-0001-Supplemental_syntax.sas  -       -         -       2007-09-27  fd886058ee930d1f3dffc2e253419bb3
+
+
+DS0002 Growth Data
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    04456-0002-Codebook.pdf             -       -         -       2007-09-27  baae5562e5f6e026658efcd4580f94f5
+
+    04456-0002-Data.dta                 -       500       83      2007-09-27  6fc2817b9c3420307a6eb1304b874922
+
+    04456-0002-Data.sav                 -       500       83      2007-09-27  7dbc4205493b3677ca67f2d172f68eb4
+
+    04456-0002-Data.stc                 -       500       83      2007-09-27  24e1b51dc6f8934a3f629553ad4f3ab6
+
+    04456-0002-Data.tsv                 -       500       83      2007-09-27  7e729cf94bd4c4724015f03b2998eee7
+
+    04456-0002-Data.txt                 437     500       83      2007-09-27  b93fdfb5fb18eca7a806342fbc74809d
+
+    04456-0002-Setup.dct                -       -         -       2007-09-27  798f61f2ca40b7eb6c421da06ecae3ab
+
+    04456-0002-Setup.do                 -       -         -       2007-09-27  862d44d44eb2afd85d6bd3dae2719b0b
+
+    04456-0002-Setup.sas                -       -         -       2007-09-27  ae0b0ff3ff5b60938e90d2720334bb73
+
+    04456-0002-Setup.sps                -       -         -       2007-09-27  c111d51d3a922c7b8a80fe521017e326
+
+    04456-0002-Supplemental_syntax.do   -       -         -       2007-09-27  b2a92dcfd7b9796f946cbb6aa8eb6db8
+
+    04456-0002-Supplemental_syntax.sas  -       -         -       2007-09-27  addcbc68b1ede88341822206be07ff24
+

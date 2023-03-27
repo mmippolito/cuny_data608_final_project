@@ -1,0 +1,149 @@
+Bibliography
+Impact of State Sentencing Policies on Incarceration Rates in the United
+States, 1975-2002
+
+This bibliography includes published and unpublished works that are related 
+to ICPSR study 4456. It includes works that are based on primary
+or secondary analysis of the data, or which describe or critique those
+data or the collection methodology. 
+
+If you publish a work or know of other works that are based on these data,
+please send the complete citation and name of the ICPSR study used to:
+icpsr-biblio-notify@umich.edu 
+
+
+1. Braithwaite, Erika, "Mass Incarceration or Massive Failure? Unintended
+Impacts on Population Health and Health Inequalities." Dissertation, McGill
+University, 2016.
+
+2. Dhondt, Geert, "Evidence from Cocaine and Marijuana Mandatory Minimum
+Sentencing." John Jay College of Criminal Justice Department of Economics
+Working Paper. John Jay College of Criminal Justice, 2012?.
+Full text PDF: http://johnjay.jjay.cuny.edu/files/departments/economics/Geert-03(1).pdf
+
+3. Dhondt, Geert, "The effect of prison population size on crime rates:
+Evidence from cocaine and marijuana mandatory minimum sentencing." American
+Review of Political Economy. 2017, 12, (1),. DOI: 10.38024/arpe.150
+Abstract: https://arpejournal.com/article/id/150/
+Full text: https://arpejournal.com/article/150/galley/145/download/
+
+4. Dhondt, Geert L., "The Relationship Between Mass Incarceration and Crime
+in the Neoliberal Period in the United States." Dissertation, University of
+Massachusetts, 2012.
+Abstract: https://scholarworks.umass.edu/open_access_dissertations/636/
+
+5. Duxbury, Scott W., "Who controls criminal law? Racial threat and the
+adoption of state sentencing law, 1975 to 2012." American Sociological
+Review. Feb 2021, 86, (1), 123 - 153. DOI: 10.1177/0003122420967647
+Abstract: https://scholarworks.umass.edu/open_access_dissertations/636/
+
+6. Harmon, Mike G., "'Fixed' sentencing: The effect on imprisonment rates
+over time." Journal of Quantitative Criminology. 2013, 29, 369 - 397. DOI:
+10.1007/s10940-012-9182-x
+Abstract: https://scholarworks.umass.edu/open_access_dissertations/636/
+
+7. Jackson, Henry, Jr., "Power, Policy, and the Ideology of Punishment:
+Time Series Analysis of the U.S. Political Economy of Punishment in the
+Race to Incarcerate, 1972-2002." Dissertation, Kansas State University,
+2009.
+Abstract: https://scholarworks.umass.edu/open_access_dissertations/636/
+
+8. Jackson, Henry, Jr., "Race, economy and punishment: Inequity and racial
+disparity in imprisonment, 1972-2002." Criminal Justice Studies. 2014, 27,
+(2), 226 - 243. DOI: 10.1080/1478601X.2013.870073
+Abstract: https://scholarworks.umass.edu/open_access_dissertations/636/
+
+9. Kebhal, Suhaib; Shahidinia, Nima; Testa, Alexander; Williams, Justin,
+"Collateral damage and the war on drugs: Estimating the effect of zero
+tolerance policies on drug arrest rates, 1975-2002." Public Purpose. Spr
+2013, 11, 1 - 25.
+Full text PDF: http://observer.american.edu/spa/publicpurpose/upload/2013_Collateral-Damage.pdf
+
+10. Levchak, Philip J.; Heimer, Karen; Lang, Joseph B.; Lauritsen, Janet
+L., "Race and men's imprisonment in the United States: Religious
+conservatism, political conservatism and racial threat." British Journal of
+Criminology. Sep 2022, 62, (5), 1233 - 1251. DOI: 10.1093/bjc/azac049 2002-
+IJ-CX-0027
+Full text PDF: http://observer.american.edu/spa/publicpurpose/upload/2013_Collateral-Damage.pdf
+
+11. Neill, Katherine A., "The War on Drugs in the American States:
+Variations in Sentencing Policies Over Time." Dissertation, Old Dominion
+University, 2014.
+Full text PDF: http://observer.american.edu/spa/publicpurpose/upload/2013_Collateral-Damage.pdf
+
+12. Rengifo, Andres F.; Stemen, Don, "The unintended effects of penal
+reform: African American presence, incarceration, and the abolition of
+discretionary parole in the united states." Crime and Delinquency. 2015, 6,
+(5), 719 - 741. DOI: 10.1177/0011128712443218 2002-IJ-CX-0027
+Full text PDF: http://observer.american.edu/spa/publicpurpose/upload/2013_Collateral-Damage.pdf
+
+13. Stemen, Don; Rengifo, Andres, "Charting the evolution of structure and
+determinacy in state sentencing and corrections policies 1970-2010."
+Justice Research and Policy. 2012, 14, (2), 1 - 31. 2002-IJ-CX-0027
+Full text PDF: http://observer.american.edu/spa/publicpurpose/upload/2013_Collateral-Damage.pdf
+
+14. Stemen, Don; Rengifo, Andres F., "Policies and imprisonment: The impact
+of structured sentencing and determinate sentencing in state incarceration
+rates, 1978-2004." Justice Quarterly. 2011, 28, (1), 174 - 201. DOI:
+10.1080/07418821003694759 NCJ 233758 2002-IJ-CX-0027
+Abstract: http://www.ncjrs.gov/App/publications/abstract.aspx?ID=255694
+
+15. Stemen, Don; Rengifo, Andres; Wilson, James, "Of Fragmentation and
+Ferment: The Impact of State Sentencing Policies on Incarceration Rates,
+1975-2002." Final Report. NCJ 213003, Washington, DC: United States
+Department of Justice, National Institute of Justice, Feb 2006. 2002-IJ-CX-
+0027
+Abstract: https://www.ncjrs.gov/App/Publications/abstract.aspx?ID=234496
+Full text PDF: http://www.ncjrs.gov/pdffiles1/nij/grants/213003.pdf
+The study found that States with a combination of determinate sentencing
+(abolition of discretionary parole release) and presumptive sentencing
+guidelines had lower incarceration rates and a smaller growth in these
+rates than other States. These policies had to be implemented in
+combination in order to have this effect. States with separate time-served
+requirements for violent offenders had higher incarceration rates than
+States without such requirements, and States with a higher number of
+sentencing extensions for drug offenses had comparatively higher
+incarceration rates. Also, States with a higher number of mandatory
+sentencing laws had higher incarceration rates; however, no link was found
+between laws that increased prison sentences for second-time or third-time
+offenders and the incarceration rate. Factors other than law and policy
+that increased incarceration rates were higher property-crime rates, larger
+minority populations, a higher unemployment rate, more revenue per capita,
+a higher number of arrests for drug offenses, a Republican governor, a
+higher number of religiously conservative residents, and a higher number of
+politically conservative residents. States with higher income per capita
+and more generous welfare benefits had lower incarceration rates. Using a
+pooled time-series cross-sectional design and using data for all 50 States
+obtained from several government sources, the study isolated the influence
+of sentencing and corrections policies on changes in State incarceration
+rates between 1975 and 2002. The analysis controlled for a number of
+demographic, economic, ideological, and crime-related variables.
+
+16. Stemen, Donald, "Policies of Imprisonment: Sentencing and Corrections
+Policy Innovation in the United States, 1970-2002." New York University,
+2007. 2002-IJ-CX-0027
+Abstract: https://www.ncjrs.gov/App/Publications/abstract.aspx?ID=234496
+Full text PDF: http://www.ncjrs.gov/pdffiles1/nij/grants/213003.pdf
+The study found that States with a combination of determinate sentencing
+(abolition of discretionary parole release) and presumptive sentencing
+guidelines had lower incarceration rates and a smaller growth in these
+rates than other States. These policies had to be implemented in
+combination in order to have this effect. States with separate time-served
+requirements for violent offenders had higher incarceration rates than
+States without such requirements, and States with a higher number of
+sentencing extensions for drug offenses had comparatively higher
+incarceration rates. Also, States with a higher number of mandatory
+sentencing laws had higher incarceration rates; however, no link was found
+between laws that increased prison sentences for second-time or third-time
+offenders and the incarceration rate. Factors other than law and policy
+that increased incarceration rates were higher property-crime rates, larger
+minority populations, a higher unemployment rate, more revenue per capita,
+a higher number of arrests for drug offenses, a Republican governor, a
+higher number of religiously conservative residents, and a higher number of
+politically conservative residents. States with higher income per capita
+and more generous welfare benefits had lower incarceration rates. Using a
+pooled time-series cross-sectional design and using data for all 50 States
+obtained from several government sources, the study isolated the influence
+of sentencing and corrections policies on changes in State incarceration
+rates between 1975 and 2002. The analysis controlled for a number of
+demographic, economic, ideological, and crime-related variables.
