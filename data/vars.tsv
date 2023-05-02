@@ -40,12 +40,12 @@ Sentencing	TIS policy	tisp	Pct sentence imposed most offenders required to serve
 Sentencing	TIS policy	tiss	Min time served req'd
 Sentencing	TIS policy	tisviol	Separate time served req for violent offenses
 Sentencing	TIS policy	tisviol	Separate time served req for violent offenses
-Sentencing	Guidelines	Pre_guid	presence of presumptive guidelines (guidelines contained in legislation)
-Sentencing	Guidelines	Pre_volg	presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)
-Sentencing	Guidelines	Pre_par	presence of determinate sentencing (sentences have a defined length)
-Sentencing	Guidelines	Rec_sent	presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)
-Sentencing	Guidelines	Presum_s	presence of presumptive sentences (sentences contained in legislation)
-Sentencing	Guidelines	Pre_rec_	presence of presumptive recommended sentences (assume this means ranges are contained in legislation)
+Sentencing	Guidelines	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)
+Sentencing	Guidelines	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)
+Sentencing	Guidelines	pre_par	Presence of determinate sentencing (sentences have a defined length)
+Sentencing	Guidelines	rec_sent	Presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)
+Sentencing	Guidelines	presum_s	Presence of presumptive sentences (sentences contained in legislation)
+Sentencing	Guidelines	pre_rec_	Presence of presumptive recommended sentences (assume this means ranges are contained in legislation)
 Enhancement	Triggers	m1_weap	Total enhancements with weapons as trigger
 Enhancement	Triggers	m2_prox	Total enhancements with proximity as trigger
 Enhancement	Triggers	m3_offic	Total enhancements with assault of peace officer as trigger
