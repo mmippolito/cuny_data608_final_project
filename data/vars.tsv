@@ -1,150 +1,150 @@
-cat	subcat	var	descr	missing
-Outcome	Incarceration rate	inc_rate	Incarceration rate per 100,000 residents	0
-Outcome	Incarceration rate	lag_incr	Incarceration rate lagged 1 yr	999
-Outcome	Incarceration rate	d_inc_ra	Difference in incarc rate (t1) - incarc rate (t0)	999
-Outcome	Prison admissions	admissio	Prison admissions	999999
-Outcome	Prison admissions	adm_100k	Prison admissions per 100k res	999
-Outcome	Court commitments	ncourtc	new Court commitments	99999
-Outcome	Court commitments	court_10	Court commitments per 100k res	999
-Outcome	Drug arrests	drug_arr	Rate of drug arrests lagged 1 yr (arrests per pop)	9999
-Outcome	Drug arrests	pro_drug	Drug arrests 3-yr avg (drug arrests/total arrests)	9
-Outcome	Crime rates	cri_l1	Crime rate lagged 1 yr	0
-Outcome	Crime rates	vio_l1	Violent crime rate lagged 1 yr	0
-Outcome	Crime rates	pro_crim	Property crime rate lagged 1yr	0
-Control	Geography	state_na	State name	0
-Control	Geography	south	Southern state	0
-Control	Geography	west	Western state	0
-Control	Geography	east	Eastern state	0
-Control	Geography	midwest	Midwestern state	0
-Control	Time	year	Year	0
-Control	Demographics	pop_l1	Population (thousands) lagged 1yr	0
-Control	Demographics	p_1824_l	Pct pop 18-24 lagged 1 yr	0
-Control	Demographics	p_25_34_	Pct pop 25-34 lagged 1 yr	0
-Control	Demographics	p_black_	Pct black pop lagged 1 yr	99
-Control	Demographics	p_hisp_l	Pct hispanic pop lagged 1 yr	0
-Control	Demographics	metro_l1	Pct pop living in metro areas lagged 1 yr	0
-Control	Economy	incpc_l1	Income per capita lagged 1 yr	0
-Control	Economy	poverty_	Poverty rate lagged 1 yr (census cps historic)	0
-Control	Economy	unemp_l1	Unemployement rate (not seasonally adj) lagged 1 yr	0
-Control	Economy	rev_l2_1	State revenues per 100,000 res in constant US$ lagged 2 yrs	0
-Control	Economy	wel_l1_1	Expenditure on public welfare per 100,000 res in constant US$ lagged 1 yr	0
-Control	Economy	gini	Gini coeffic for families (us census) - lower values=more equally distributed income	0
-Control	Corrections	expcorr_	Direct expenditure on corrections constant US$ lagged 1 yr	0
-Control	Corrections	correxp_	Corrections expenditure per capita	0
-Control	Corrections	pol_100k	Full-time equiv police offic per 100k residents	0
-Control	Society	religion	Fundamentalist religion	0
-Control	Society	ideo2	Citizen ideology scale lagged 1 yr (higher=more liberal)	0
-Control	Society	gov2	Gov't/instit ideology scale lagged 1 yr (higher=more liberal)	0
-Control	Society	govern	Republican governor (1=yes)	0
-Sentencing	TIS policy	tisp	Pct sentence imposed most offenders required to serve	999
-Sentencing	TIS policy	tiss	Minimum time served required	9
-Sentencing	TIS policy	tisviol	Separate time served req for violent offenses	9
-Sentencing	Sentencing structure	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)	0
-Sentencing	Sentencing structure	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)	0
-Sentencing	Sentencing structure	pre_par	Presence of determinate sentencing (sentences have a defined length)	0
-Sentencing	Sentencing structure	rec_sent	Presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)	0
-Sentencing	Sentencing structure	presum_s	Presence of presumptive sentences (sentences contained in legislation)	0
-Sentencing	Sentencing structure	pre_rec_	Presence of presumptive recommended sentences (assume this means ranges are contained in legislation)	0
-Enhancement	Triggers	m1_weap	Total enhancements with weapons as trigger	9
-Enhancement	Triggers	m2_prox	Total enhancements with proximity as trigger	9
-Enhancement	Triggers	m3_offic	Total enhancements with assault of peace officer as trigger	9
-Enhancement	Triggers	m4_harm	Total enhancements with bodily harm & agg assault as trigger	9
-Enhancement	Triggers	m5_cont	Total enhancements with violation of supervision as trigger	9
-Enhancement	Triggers	m6_citi	Total enhancementw with protected populations as trigger	9
-Enhancement	Triggers	m7_repe	Total enhancements with repeated offender as trigger	9
-Enhancement	Triggers	m8_mult	Total enhancements with multiple victims as trigger	9
-Enhancement	Triggers	m9_drug	Total enhancements with durg quantity as trigger	9
-Enhancement	Weapons enhancements	m10_we1a	Presence of mandatory sentence: trigger: against cop/corrections; offense: ?	9
-Enhancement	Weapons enhancements	m11_we1b	Requires underlying sentence	9
-Enhancement	Weapons enhancements	m12_we1c	Requires judge to impose sentence	9
-Enhancement	Weapons enhancements	m13_we1d	Mandatory sentence affects release	9
-Enhancement	Weapons enhancements	m14_we1e	Type of mandatory sentence	9
-Enhancement	Weapons enhancements	m15_we1f	Min sentencence (months)	9
-Enhancement	Weapons enhancements	m16_we2a	Presence of mandatory sentence: trigger: weapon; offense: rape	9
-Enhancement	Weapons enhancements	m17_we2b	Requires underlying sentence	9
-Enhancement	Weapons enhancements	m18_we2c	Requires judge to impose sentence	9
-Enhancement	Weapons enhancements	m19_we2d	Mandatory sentence affects release	9
-Enhancement	Weapons enhancements	m20_we2e	Type of mandatory sentence	9
-Enhancement	Weapons enhancements	m21_we2f	Min sentencence (months)	9
-Enhancement	Weapons enhancements	m22_we3a	Presence of mandatory sentence: trigger: weapon: offense: robbery	9
-Enhancement	Weapons enhancements	m23_we3b	Requires underlying sentence	9
-Enhancement	Weapons enhancements	m24_we3c	Requires judge to impose sentence	9
-Enhancement	Weapons enhancements	m25_we3d	Mandatory sentence affects release	9
-Enhancement	Weapons enhancements	m26_we3e	Type of mandatory sentence	9
-Enhancement	Weapons enhancements	m27_we3f	Min sentencence (months)	9
-Enhancement	Weapons enhancements	m28_we4a	Presence of mandatory sentence: trigger: weapon: offense: burglary	9
-Enhancement	Weapons enhancements	m29_we4b	Requires underlying sentence	9
-Enhancement	Weapons enhancements	m30_we4c	Requires judge to impose sentence	9
-Enhancement	Weapons enhancements	m31_we4d	Mandatory sentence affects release	9
-Enhancement	Weapons enhancements	m32_we4e	Type of mandatory sentence	9
-Enhancement	Weapons enhancements	m33_we4f	Min sentencence (months)	9
-Enhancement	Drug enhancements	m34_dr1a	Presence of mandatory sentence: trigger: repeated offender: offense: drug poss	9
-Enhancement	Drug enhancements	m35_dr1b	Requires underlying sentence	9
-Enhancement	Drug enhancements	m36_dr1c	Requires judge to impose sentence	9
-Enhancement	Drug enhancements	m37_dr1d	Mandatory sentence affects release	9
-Enhancement	Drug enhancements	m38_dr1e	Type of mandatory sentence	9
-Enhancement	Drug enhancements	m39_dr1f	Min sentencence (months)	9
-Enhancement	Drug enhancements	m40_dr2a	Presence of mandatory sentence: trigger: firearm: offense: drug sale	9
-Enhancement	Drug enhancements	m41_dr2b	Requires underlying sentence	9
-Enhancement	Drug enhancements	m42_dr2c	Requires judge to impose sentence	9
-Enhancement	Drug enhancements	m43_dr2d	Mandatory sentence affects release	9
-Enhancement	Drug enhancements	m44_dr2e	Type of mandatory sentence	9
-Enhancement	Drug enhancements	m45_dr2f	Min sentencence (months)	9
-Enhancement	Drug enhancements	m46_dr3a	Presence of mandatory sentence: trigger: age-specific victim: offense: drug sale	9
-Enhancement	Drug enhancements	m47_dr3b	Requires underlying sentence	9
-Enhancement	Drug enhancements	m48_dr3c	Requires judge to impose sentence	9
-Enhancement	Drug enhancements	m49_dr3d	Mandatory sentence affects release	9
-Enhancement	Drug enhancements	m50_dr3e	Type of mandatory sentence	9
-Enhancement	Drug enhancements	m51_dr3f	Min sentencence (months)	9
-Enhancement	Bodily harm enhancements	m52_vi1a	Presence of mandatory sentence: trigger: bodily harm: offense: robbery	9
-Enhancement	Bodily harm enhancements	m53_vi1b	Requires underlying sentence	9
-Enhancement	Bodily harm enhancements	m54_vi1c	Requires judge to impose sentence	9
-Enhancement	Bodily harm enhancements	m55_vi1d	Mandatory sentence affects release	9
-Enhancement	Bodily harm enhancements	m56_vi1e	Type of mandatory sentence	9
-Enhancement	Bodily harm enhancements	m57_vi1f	Min sentencence (months)	9
-Enhancement	Bodily harm enhancements	m58_vi2a	Presence of mandatory sentence: trigger: bodily harm: offense: burglary	9
-Enhancement	Bodily harm enhancements	m59_vi2b	Requires underlying sentence	9
-Enhancement	Bodily harm enhancements	m60_vi2c	Requires judge to impose sentence	9
-Enhancement	Bodily harm enhancements	m61_vi2d	Mandatory sentence affects release	9
-Enhancement	Bodily harm enhancements	m62_vi2e	Type of mandatory sentence	9
-Enhancement	Bodily harm enhancements	m63_vi2f	Min sentencence (months)	9
-Drug policy	Severity levels	dr_0a	# of severity levels for cocaine poss	9
-Drug policy	Severity levels	dr_0b	# of severity levels for cocaine sale	9
-Drug policy	Severity levels	mar_spos	# of severity levels for marijuana poss	9
-Drug policy	Severity levels	mar_ssal	# of severity levels for marijuana sale	9
-Drug policy	Severity levels	her_spos	# of severity levels for heroin poss	9
-Drug policy	Severity levels	her_ssal	# of severity levels for heroin sale	9
-Drug policy	Max/Min sentences	dr_1a	Cocaine possession: max sentence for min quantity (mo)	9
-Drug policy	Max/Min sentences	dr_1b	Cocaine sale: max sentence for min quantity (mo)	9
-Drug policy	Max/Min sentences	dr_2a	Cocaine possession: min sentence for 28oz or most similar quantity (mo)	9
-Drug policy	Max/Min sentences	dr_2b	Cocaine sale: min sentence for 28oz or most similar quantity (mo)	9
-Drug policy	Max/Min sentences	he_min1o	Heroin poss: min sentence for 1 oz or most similar quantity (mo)	9
-Drug policy	Max/Min sentences	he_min_1	Heroin sale: min sentence for 1 oz or most similar quantity (mo)	9
-Drug policy	Max/Min sentences	mar_min_	Marijuana poss: min sentence for 1 lb or equivalent (mo)	9
-Drug policy	Max/Min sentences	mar_mi_1	Marijuana sale: min sentence for 1 lb or equivalent (mo)	9
-Drug policy	Sentence enhancements	dr_3coc	# of sentence enhancements for cocaine (1=sale, 2=poss, 3=both)	9
-Drug policy	Sentence enhancements	dr_3mar	# of sentence enhancements for marijuana (1=sale, 2=poss, 3=both)	9
-Drug policy	Sentence enhancements	dr_3oth	# of sentence enhancements for other drugs (1=sale, 2=poss, 3=both)	9
-Habitual offender	Presence of HOL	hol_drug	Presence of habitual offender laws for drug offenders	9
-Habitual offender	Presence of HOL	hol_vio	Presence of habitual offender laws for violent offenders	9
-Habitual offender	Presence of HOL	hol_sex	Presence of habitual offender laws for sex offenders	9
-Habitual offender	Two-strikes law	hol_2str	Presence of two-strikes law	9
-Habitual offender	Two-strikes law	hol2_pro	All prior felony offense qualify	9
-Habitual offender	Two-strikes law	hol2_cuo	All current felony offenses qualify	9
-Habitual offender	Two-strikes law	hol2_alt	Statute req judge to alter sentence	9
-Habitual offender	Two-strikes law	hol2_man	Mandatory incarceration	9
-Habitual offender	Two-strikes law	hol2_st1	Sentence varies by offense	9
-Habitual offender	Two-strikes law	hol2_st2	Life is max available for most serious offense class	9
-Habitual offender	Two-strikes law	hol2_st3	Max sentence for lowest felony class (mo)	9
-Habitual offender	Two-strikes law	prior2	Prior conviction triggers law	9
-Habitual offender	Two-strikes law	time_fr2	Undeterminate time frame for previous offenses	9
-Habitual offender	Three-strikes law	hol_3str	Presence of three-strikes law	9
-Habitual offender	Three-strikes law	hol3_pro	All prior felony offense qualify	9
-Habitual offender	Three-strikes law	hol3_cuo	All current felony offenses qualify	9
-Habitual offender	Three-strikes law	hol3_alt	Statute requires judge to alter sentence	9
-Habitual offender	Three-strikes law	hol3_man	Mandatory incarceration	9
-Habitual offender	Three-strikes law	hol3_st1	Sentence varies by offense	9
-Habitual offender	Three-strikes law	hol3_st2	Life is max available for most serious offense class	9
-Habitual offender	Three-strikes law	hol3_st3	Max sentence for lowest felony class (mo)	9
-Habitual offender	Three-strikes law	prior3	Prior conviction triggers law	9
-Habitual offender	Three-strikes law	time_fr3	Undeterminate time frame for previous offenses	9
+cat	subcat	var	descr	missing	vartype
+Outcome	Incarceration rate	inc_rate	Incarceration rate per 100,000 residents	-1	quant
+Outcome	Incarceration rate	lag_incr	Incarceration rate lagged 1 yr	999	quant
+Outcome	Incarceration rate	d_inc_ra	Difference in incarc rate (t1) - incarc rate (t0)	999	quant
+Outcome	Prison admissions	admissio	Prison admissions	999999	quant
+Outcome	Prison admissions	adm_100k	Prison admissions per 100k res	999	quant
+Outcome	Court commitments	ncourtc	New court commitments	99999	quant
+Outcome	Court commitments	court_10	Court commitments per 100k res	999	quant
+Outcome	Drug arrests	drug_arr	Rate of drug arrests lagged 1 yr (arrests per pop)	9999	quant
+Outcome	Drug arrests	pro_drug	Drug arrests 3-yr avg (drug arrests/total arrests)	9	quant
+Outcome	Crime rates	cri_l1	Crime rate lagged 1 yr	-1	quant
+Outcome	Crime rates	vio_l1	Violent crime rate lagged 1 yr	-1	quant
+Outcome	Crime rates	pro_crim	Property crime rate lagged 1yr	-1	quant
+Control	Geography	state_na	State name	-1	cat
+Control	Geography	south	Southern state	-1	cat
+Control	Geography	west	Western state	-1	cat
+Control	Geography	east	Eastern state	-1	cat
+Control	Geography	midwest	Midwestern state	-1	cat
+Control	Time	year	Year	-1	quant
+Control	Demographics	pop_l1	Population (thousands) lagged 1yr	-1	quant
+Control	Demographics	p_1824_l	Pct population aged 18-24 lagged 1 yr	-1	quant
+Control	Demographics	p_25_34_	Pct population aged 25-34 lagged 1 yr	-1	quant
+Control	Demographics	p_black_	Pct black pop lagged 1 yr	99	quant
+Control	Demographics	p_hisp_l	Pct hispanic pop lagged 1 yr	-1	quant
+Control	Demographics	metro_l1	Pct population living in metro areas lagged 1 yr	-1	quant
+Control	Economy	incpc_l1	Income per capita lagged 1 yr	-1	quant
+Control	Economy	poverty_	Poverty rate lagged 1 yr (census cps historic)	-1	quant
+Control	Economy	unemp_l1	Unemployement rate (not seasonally adj) lagged 1 yr	-1	quant
+Control	Economy	rev_l2_1	State revenues per 100,000 res in constant US$ lagged 2 yrs	-1	quant
+Control	Economy	wel_l1_1	Expenditure on public welfare per 100,000 res in constant US$ lagged 1 yr	-1	quant
+Control	Economy	gini	Gini coeffic for families (lower values=more equally distributed income)	-1	quant
+Control	Society	religion	Pct of population adhering to a fundamentalist religion	-1	quant
+Control	Society	ideo2	Citizen ideology scale lagged 1 yr (higher=more liberal)	-1	quant
+Control	Society	gov2	Gov't/instit ideology scale lagged 1 yr (higher=more liberal)	-1	quant
+Control	Society	govern	Republican governor	9	cat
+Control	Corrections	expcorr_	Direct expenditure on corrections constant US$ lagged 1 yr	-1	quant
+Control	Corrections	correxp_	Corrections expenditure per capita	-1	quant
+Control	Corrections	pol_100k	Full-time equiv police offic per 100k residents	-1	quant
+Sentencing	TIS policy	tisp	Pct sentence imposed most offenders required to serve	999	quant
+Sentencing	TIS policy	tiss	Minimum time served required	9	cat
+Sentencing	TIS policy	tisviol	Separate time served req for violent offenses	9	cat
+Sentencing	Sentencing structure	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)	9	cat
+Sentencing	Sentencing structure	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)	9	cat
+Sentencing	Sentencing structure	pre_par	Presence of determinate sentencing (sentences have a defined length)	9	cat
+Sentencing	Sentencing structure	rec_sent	Presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)	9	cat
+Sentencing	Sentencing structure	presum_s	Presence of presumptive sentences (sentences contained in legislation)	9	cat
+Sentencing	Sentencing structure	pre_rec_	Presence of presumptive recommended sentences (assume this means ranges are contained in legislation)	9	cat
+Enhancements	Triggers	m1_weap	Total enhancements with weapons as trigger	9	quant
+Enhancements	Triggers	m2_prox	Total enhancements with proximity as trigger	9	quant
+Enhancements	Triggers	m3_offic	Total enhancements with assault of peace officer as trigger	9	quant
+Enhancements	Triggers	m4_harm	Total enhancements with bodily harm & agg assault as trigger	9	quant
+Enhancements	Triggers	m5_cont	Total enhancements with violation of supervision as trigger	9	quant
+Enhancements	Triggers	m6_citi	Total enhancementw with protected populations as trigger	9	quant
+Enhancements	Triggers	m7_repe	Total enhancements with repeated offender as trigger	9	quant
+Enhancements	Triggers	m8_mult	Total enhancements with multiple victims as trigger	9	quant
+Enhancements	Triggers	m9_drug	Total enhancements with durg quantity as trigger	9	quant
+Enhancements	Weapons enhancements	m10_we1a	Presence of mandatory sentence: trigger: against cop/corrections; offense: ?	9	cat
+Enhancements	Weapons enhancements	m11_we1b	Requires underlying sentence	9	cat
+Enhancements	Weapons enhancements	m12_we1c	Requires judge to impose sentence	9	cat
+Enhancements	Weapons enhancements	m13_we1d	Mandatory sentence affects release	9	cat
+Enhancements	Weapons enhancements	m14_we1e	Type of mandatory sentence	9	cat
+Enhancements	Weapons enhancements	m15_we1f	Min sentencence (months)	9	quant
+Enhancements	Weapons enhancements	m16_we2a	Presence of mandatory sentence: trigger: weapon; offense: rape	9	cat
+Enhancements	Weapons enhancements	m17_we2b	Requires underlying sentence	9	cat
+Enhancements	Weapons enhancements	m18_we2c	Requires judge to impose sentence	9	cat
+Enhancements	Weapons enhancements	m19_we2d	Mandatory sentence affects release	9	cat
+Enhancements	Weapons enhancements	m20_we2e	Type of mandatory sentence	9	cat
+Enhancements	Weapons enhancements	m21_we2f	Min sentencence (months)	9	quant
+Enhancements	Weapons enhancements	m22_we3a	Presence of mandatory sentence: trigger: weapon: offense: robbery	9	cat
+Enhancements	Weapons enhancements	m23_we3b	Requires underlying sentence	9	cat
+Enhancements	Weapons enhancements	m24_we3c	Requires judge to impose sentence	9	cat
+Enhancements	Weapons enhancements	m25_we3d	Mandatory sentence affects release	9	cat
+Enhancements	Weapons enhancements	m26_we3e	Type of mandatory sentence	9	cat
+Enhancements	Weapons enhancements	m27_we3f	Min sentencence (months)	9	quant
+Enhancements	Weapons enhancements	m28_we4a	Presence of mandatory sentence: trigger: weapon: offense: burglary	9	cat
+Enhancements	Weapons enhancements	m29_we4b	Requires underlying sentence	9	cat
+Enhancements	Weapons enhancements	m30_we4c	Requires judge to impose sentence	9	cat
+Enhancements	Weapons enhancements	m31_we4d	Mandatory sentence affects release	9	cat
+Enhancements	Weapons enhancements	m32_we4e	Type of mandatory sentence	9	cat
+Enhancements	Weapons enhancements	m33_we4f	Min sentencence (months)	9	quant
+Enhancements	Drug enhancements	m34_dr1a	Presence of mandatory sentence: trigger: repeated offender: offense: drug poss	9	cat
+Enhancements	Drug enhancements	m35_dr1b	Requires underlying sentence	9	cat
+Enhancements	Drug enhancements	m36_dr1c	Requires judge to impose sentence	9	cat
+Enhancements	Drug enhancements	m37_dr1d	Mandatory sentence affects release	9	cat
+Enhancements	Drug enhancements	m38_dr1e	Type of mandatory sentence	9	cat
+Enhancements	Drug enhancements	m39_dr1f	Min sentencence (months)	9	quant
+Enhancements	Drug enhancements	m40_dr2a	Presence of mandatory sentence: trigger: firearm: offense: drug sale	9	cat
+Enhancements	Drug enhancements	m41_dr2b	Requires underlying sentence	9	cat
+Enhancements	Drug enhancements	m42_dr2c	Requires judge to impose sentence	9	cat
+Enhancements	Drug enhancements	m43_dr2d	Mandatory sentence affects release	9	cat
+Enhancements	Drug enhancements	m44_dr2e	Type of mandatory sentence	9	cat
+Enhancements	Drug enhancements	m45_dr2f	Min sentencence (months)	9	quant
+Enhancements	Drug enhancements	m46_dr3a	Presence of mandatory sentence: trigger: age-specific victim: offense: drug sale	9	cat
+Enhancements	Drug enhancements	m47_dr3b	Requires underlying sentence	9	cat
+Enhancements	Drug enhancements	m48_dr3c	Requires judge to impose sentence	9	cat
+Enhancements	Drug enhancements	m49_dr3d	Mandatory sentence affects release	9	cat
+Enhancements	Drug enhancements	m50_dr3e	Type of mandatory sentence	9	cat
+Enhancements	Drug enhancements	m51_dr3f	Min sentencence (months)	9	quant
+Enhancements	Bodily harm enhancements	m52_vi1a	Presence of mandatory sentence: trigger: bodily harm: offense: robbery	9	cat
+Enhancements	Bodily harm enhancements	m53_vi1b	Requires underlying sentence	9	cat
+Enhancements	Bodily harm enhancements	m54_vi1c	Requires judge to impose sentence	9	cat
+Enhancements	Bodily harm enhancements	m55_vi1d	Mandatory sentence affects release	9	cat
+Enhancements	Bodily harm enhancements	m56_vi1e	Type of mandatory sentence	9	cat
+Enhancements	Bodily harm enhancements	m57_vi1f	Min sentencence (months)	9	quant
+Enhancements	Bodily harm enhancements	m58_vi2a	Presence of mandatory sentence: trigger: bodily harm: offense: burglary	9	cat
+Enhancements	Bodily harm enhancements	m59_vi2b	Requires underlying sentence	9	cat
+Enhancements	Bodily harm enhancements	m60_vi2c	Requires judge to impose sentence	9	cat
+Enhancements	Bodily harm enhancements	m61_vi2d	Mandatory sentence affects release	9	cat
+Enhancements	Bodily harm enhancements	m62_vi2e	Type of mandatory sentence	9	cat
+Enhancements	Bodily harm enhancements	m63_vi2f	Min sentencence (months)	9	quant
+Drug policy	Severity levels	dr_0a	# of severity levels for cocaine poss	9	quant
+Drug policy	Severity levels	dr_0b	# of severity levels for cocaine sale	9	quant
+Drug policy	Severity levels	mar_spos	# of severity levels for marijuana poss	9	quant
+Drug policy	Severity levels	mar_ssal	# of severity levels for marijuana sale	9	quant
+Drug policy	Severity levels	her_spos	# of severity levels for heroin poss	9	quant
+Drug policy	Severity levels	her_ssal	# of severity levels for heroin sale	9	quant
+Drug policy	Max/Min sentences	dr_1a	Cocaine possession: max sentence for min quantity (mo)	9	quant
+Drug policy	Max/Min sentences	dr_1b	Cocaine sale: max sentence for min quantity (mo)	9	quant
+Drug policy	Max/Min sentences	dr_2a	Cocaine possession: min sentence for 28oz or most similar quantity (mo)	9	quant
+Drug policy	Max/Min sentences	dr_2b	Cocaine sale: min sentence for 28oz or most similar quantity (mo)	9	quant
+Drug policy	Max/Min sentences	he_min1o	Heroin poss: min sentence for 1 oz or most similar quantity (mo)	9	quant
+Drug policy	Max/Min sentences	he_min_1	Heroin sale: min sentence for 1 oz or most similar quantity (mo)	9	quant
+Drug policy	Max/Min sentences	mar_min_	Marijuana poss: min sentence for 1 lb or equivalent (mo)	9	quant
+Drug policy	Max/Min sentences	mar_mi_1	Marijuana sale: min sentence for 1 lb or equivalent (mo)	9	quant
+Drug policy	Sentence enhancements	dr_3coc	# of sentence enhancements for cocaine (1=sale, 2=poss, 3=both)	9	quant
+Drug policy	Sentence enhancements	dr_3mar	# of sentence enhancements for marijuana (1=sale, 2=poss, 3=both)	9	quant
+Drug policy	Sentence enhancements	dr_3oth	# of sentence enhancements for other drugs (1=sale, 2=poss, 3=both)	9	quant
+Habitual offender	Presence of HOL	hol_drug	Presence of habitual offender laws for drug offenders	9	cat
+Habitual offender	Presence of HOL	hol_vio	Presence of habitual offender laws for violent offenders	9	cat
+Habitual offender	Presence of HOL	hol_sex	Presence of habitual offender laws for sex offenders	9	cat
+Habitual offender	Two-strikes law	hol_2str	Presence of two-strikes law	9	cat
+Habitual offender	Two-strikes law	hol2_pro	All prior felony offense qualify	9	cat
+Habitual offender	Two-strikes law	hol2_cuo	All current felony offenses qualify	9	cat
+Habitual offender	Two-strikes law	hol2_alt	Statute req judge to alter sentence	9	cat
+Habitual offender	Two-strikes law	hol2_man	Mandatory incarceration	9	cat
+Habitual offender	Two-strikes law	hol2_st1	Sentence varies by offense	9	cat
+Habitual offender	Two-strikes law	hol2_st2	Life is max available for most serious offense class	9	cat
+Habitual offender	Two-strikes law	hol2_st3	Max sentence for lowest felony class (mo)	9	quant
+Habitual offender	Two-strikes law	prior2	Prior conviction triggers law	9	cat
+Habitual offender	Two-strikes law	time_fr2	Undeterminate time frame for previous offenses	9	cat
+Habitual offender	Three-strikes law	hol_3str	Presence of three-strikes law	9	cat
+Habitual offender	Three-strikes law	hol3_pro	All prior felony offense qualify	9	cat
+Habitual offender	Three-strikes law	hol3_cuo	All current felony offenses qualify	9	cat
+Habitual offender	Three-strikes law	hol3_alt	Statute requires judge to alter sentence	9	cat
+Habitual offender	Three-strikes law	hol3_man	Mandatory incarceration	9	cat
+Habitual offender	Three-strikes law	hol3_st1	Sentence varies by offense	9	cat
+Habitual offender	Three-strikes law	hol3_st2	Life is max available for most serious offense class	9	cat
+Habitual offender	Three-strikes law	hol3_st3	Max sentence for lowest felony class (mo)	9	quant
+Habitual offender	Three-strikes law	prior3	Prior conviction triggers law	9	cat
+Habitual offender	Three-strikes law	time_fr3	Undeterminate time frame for previous offenses	9	cat
