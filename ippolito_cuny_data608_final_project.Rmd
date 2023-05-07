@@ -1,18 +1,23 @@
 ---
 title: "Effect of Truth-in-Sentencing on Incarceration Rate"
-subtitle: "CUNY Data608 Final Project"
 author: "Michael Ippolito"
 date: "2023-03-26"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+subtitle: CUNY Data608 Final Project
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(plotly)
+library(gridExtra)
 ```
 
 ## Introduction
 
-Before the 1990s, many prisoners incarcerated in the US criminal justice system only served a fraction of their sentence, often being released for good behavior or other mitigating factors. These factors were applied unevenly at the discretion of parole boards. Public pressure led to the passage of the Violent Crime Control and Enforcement Act (VCCEA) in 1994, which gave incentives to states that required prisoners to serve at least 85% of their sentence.
+Before the 1990s, many prisoners incarcerated in the US criminal justice system only served a fraction of their sentence, often being released for good behavior or other mitigating factors. These factors were applied unevenly at the discretion of parole boards. Public pressure led to the passage of the Violent Crime Control and Law Enforcement Act (VCCLEA) in 1994, which gave incentives to states that required prisoners to serve at least 85% of their sentence.
 
 Arguments leading to passage of the VCCEA included that truth in sentencing (TIS) laws would deter future criminal behavior, would render justice to the perpetrator for the crime commited, and that time served would theoretically be unbiased and no longer at the whim of a parole board. Opponents of TIS argue that TIS leads to prison overcrowding, that the cost of incarcerating prisoners longer could be better spent on crime prevention programs, that it disincentivizes good behavior, and that it in fact does not serve as a deterrent to future crime. Further, it leaves judges no room in weighing extenuating factors when rendering a sentence.
 
@@ -23,7 +28,585 @@ https://www.icpsr.umich.edu/web/NACJD/studies/4456
 While the data was collected from 1972 to 2002, it is still relevant as TIS laws are still on the books in the U.S. Using an interactive Dash app deployed via Heroku, I plan on showing how the incarceration rate changes based on the extent to which each U.S. state enforces TIS, whether mandatory "enhancements" to sentences affect the rate, and whether any non-judiciary factors (e.g. poverty rate) might also have an effect on the rate.
 
 
-### References
+## Data Exploration
+
+```{r}
+
+# Read data
+dfvar = read.csv('data/vars.tsv', sep='\t')
+dfabbr = read.csv('data/state_abbr.csv')
+df1 = read.csv('data/04456-0001-Data.tsv', sep='\t')
+df2 = read.csv('data/04456-0002-Data.tsv', sep='\t')
+
+```
+
+```{r}
+
+# Summary - outcome vars
+print("")
+print("Summary - outcome vars")
+summary(df1 %>%
+    select(
+        inc_rate,
+        lag_incr,
+        d_inc_ra,
+        admissio,
+        adm_100k,
+        ncourtc,
+        court_10,
+        pro_drug,
+        drug_arr,
+        cri_l1,
+        vio_l1,
+        pro_crim
+    )
+)
+
+# Missing values
+
+# inc_rate: none missing
+print(paste('inc_rate', 'missing',0))
+
+# lag_incr: missing=999
+print(paste('lag_incr', 'missing', nrow(df1[df1['lag_incr'] == 999,])))
+
+# d_inc_ra: missing=999
+print(paste('d_inc_ra', 'missing', nrow(df1[df1['d_inc_ra'] == 999,])))
+
+# admissio: missing=999999
+print(paste('admissio', 'missing', nrow(df1[df1['admissio'] == 999999,])))
+
+# adm_100k: missing=999
+print(paste('adm_100k', 'missing', nrow(df1[df1['adm_100k'] == 999,])))
+
+# ncourtc: missing=99999
+print(paste('ncourtc', 'missing', nrow(df1[df1['ncourtc'] == 99999,])))
+
+# court_10: missing=999
+print(paste('court_10', 'missing', nrow(df1[df1['court_10'] == 999,])))
+
+# drug_arr: missing=9999
+print(paste('drug_arr', 'missing', nrow(df1[df1['drug_arr'] == 9999,])))
+
+# pro_drug: missing=9
+print(paste('pro_drug', 'missing', nrow(df1[df1['pro_drug'] == 9,])))
+
+# cri_l1: none missing
+print(paste('cri_l1', 'missing',0))
+
+# vio_l1: none missing
+print(paste('vio_l1', 'missing', 0))
+
+# pro_crim: none missing
+print(paste('pro_crim', 'missing',0))
+
+```
+
+```{r}
+
+# Histograms - incarceration rate
+fig1 <- plot_ly(type='histogram', x=df1$inc_rate, nbinsx=40) %>%
+    layout(title='Incarceration Rate', xaxis=list(title='Incarceration rate per 100,000 residents'))
+fig2 <- plot_ly(type='histogram', x=df1[df1$lag_incr != 999, 'lag_incr'], nbinsx=40) %>%
+    layout(title='Lagged Incarceration Rate', xaxis=list(title='Incarceration rate per 100,000 residents (lagged one year)'))
+fig3 <- plot_ly(type='histogram', x=df1[df1$d_inc_ra != 999, 'd_inc_ra'], nbinsx=40) %>%
+    layout(title='Incarceration Rate Difference', xaxis=list(title='Difference in incarceration rate (t1 - t0)'))
+grid.arrange(fig1, fig2, fig3)
+
+```
+
+```{r}
+
+# Histograms - prison admissions
+fig <- plot_ly(type='histogram', x=df1[df1$admissio != 999999, 'admissio'], nbinsx=40) %>%
+    layout(title='Prison Admissions', xaxis=list(title='Number of prison admissionss'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$adm_100k != 999, 'adm_100k'], nbinsx=40) %>%
+    layout(title='Prison Admission Rate', xaxis=list(title='Prison admissions per 100,000 residents'))
+fig
+
+```
+
+```{r}
+
+# Histograms - court commitments
+fig <- plot_ly(type='histogram', x=df1[df1$ncourtc != 99999, 'ncourtc'], nbinsx=40) %>%
+    layout(title='Court Commitments', xaxis=list(title='Nubmer of court commitments'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$court_10 != 999, 'court_10'], nbinsx=40) %>%
+    layout(title='Court Commitment Rate', xaxis=list(title='Court commitment rate per 100,000 residents'))
+fig
+
+```
+
+```{r}
+
+# Histograms - drug arrests
+fig <- plot_ly(type='histogram', x=df1[df1$pro_drug != 9, 'pro_drug'], nbinsx=40) %>%
+    layout(title='Drug Arrests', xaxis=list(title='Three-year average rate of drug arrests (drug arrests/total arrests)'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$drug_arr != 9999, 'drug_arr'], nbinsx=40) %>%
+    layout(title='Drug Arrest Rate', xaxis=list(title='Drug arrest rate per capita'))
+fig
+
+```
+
+```{r}
+
+# Histograms - crime rates
+fig <- plot_ly(type='histogram', x=df1$cri_l1, nbinsx=40) %>%
+    layout(title='Crime Rate', xaxis=list(title='Crime rate per 100,000 residents (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$vio_l1, nbinsx=40) %>%
+    layout(title='Violent Crime Rate', xaxis=list(title='Violent crime rate per 100,000 residents (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$pro_crim, nbinsx=40) %>%
+    layout(title='Property crime Rate', xaxis=list(title='Property crime rate per 100,000 residents (lagged one year)'))
+fig
+
+
+```
+
+```{r}
+
+# Factor
+df1$state_na = factor(df1$state_na)
+df1$south = factor(df1$south)
+df1$west = factor(df1$west)
+df1$east = factor(df1$east)
+df1$midwest = factor(df1$midwest)
+df1$year = factor(df1$year)
+df1$govern = factor(df1$govern)
+
+# Summary - control vars
+print("")
+print("Summary - control vars")
+summary(df1 %>%
+    select(
+        state_na,
+        south,
+        west,
+        east,
+        midwest,
+        year,
+        pop_l1,
+        incpc_l1,
+        unemp_l1,
+        p_1824_l,
+        p_25_34_,
+        p_black_,
+        p_hisp_l,
+        metro_l1,
+        poverty_,
+        expcorr_,
+        correxp_,
+        rev_l2_1,
+        wel_l1_1,
+        religion,
+        gini,
+        pol_100k,
+        ideo2,
+        gov2,
+        govern
+    )
+)
+
+# Missing values
+# Skipped states and years
+# No missing values for any var except:
+
+# p_black_: missing=99
+print(paste('p_black_', 'missing', nrow(df1[df1['p_black_'] == 99,])))
+
+```
+
+```{r}
+
+# Histograms - demographics
+fig <- plot_ly(type='histogram', x=df1$pop_l1, nbinsx=40) %>%
+    layout(title='Population', xaxis=list(title='Population (thousands - lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$p_1824_l, nbinsx=40) %>%
+    layout(title='Population 18-24', xaxis=list(title='Pct of population 18-24 (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$p_25_34_, nbinsx=40) %>%
+    layout(title='Population 25-34', xaxis=list(title='Pct of population 25-34 (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$p_black_ != 99, 'p_black_'], nbinsx=40) %>%
+    layout(title='Black Population', xaxis=list(title='Pct of population Black (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$p_hisp_l, nbinsx=40) %>%
+    layout(title='Hispanic Population', xaxis=list(title='Pct of population Hispanic (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$metro_l1, nbinsx=40) %>%
+    layout(title='Metropolitan Population', xaxis=list(title='Pct of population living in metropolitan areas (lagged one year)'))
+fig
+
+```
+
+```{r}
+
+# Histograms - economy
+fig <- plot_ly(type='histogram', x=df1$incpc_l1, nbinsx=40) %>%
+    layout(title='Income', xaxis=list(title='Income per capita (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$poverty_, nbinsx=40) %>%
+    layout(title='Poverty Rate', xaxis=list(title='Poverty rate (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$unemp_l1, nbinsx=40) %>%
+    layout(title='Unemployment Rate', xaxis=list(title='Unemployment rate (lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$rev_l2_1, nbinsx=40) %>%
+    layout(title='State Revenues', xaxis=list(title='State revenues per 100,000 residents (constant US$ - lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$wel_l1_1, nbinsx=40) %>%
+    layout(title='Welfare Expenditures', xaxis=list(title='Welfare expenditures per 100,000 residents (constant US$ - lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$gini, nbinsx=40) %>%
+    layout(title='Gini Coefficient', xaxis=list(title='Gini coefficient for families (lower=more equally distributed income)'))
+fig
+
+```
+
+```{r}
+
+# Histograms - corrections
+fig <- plot_ly(type='histogram', x=df1$expcorr_, nbinsx=40) %>%
+    layout(title='Corrections Expenditures', xaxis=list(title='Direct expenditures on corrections (constant US$ - lagged one year)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$correxp_, nbinsx=40) %>%
+    layout(title='Corrections Expenditures Per Capita', xaxis=list(title='Corrections Expendutres per capita'))
+fig
+fig <- plot_ly(type='histogram', x=df1$pol_100k, nbinsx=40) %>%
+    layout(title='Police Officers', xaxis=list(title='Full-time equivaluent police officers per 100,000 residents'))
+fig
+
+```
+
+```{r}
+
+# Histograms - society
+fig <- plot_ly(type='histogram', x=df1$religion, nbinsx=40) %>%
+    layout(title='Fundamentalist Religion', xaxis=list(title='Pct of population having fundamentalist religion'))
+fig
+fig <- plot_ly(type='histogram', x=df1$ideo2, nbinsx=40) %>%
+    layout(title='Citizen Ideology', xaxis=list(title='Citizen ideology scale (lagged one year - higher=more liberal)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$gov2, nbinsx=40) %>%
+    layout(title='Government Ideology', xaxis=list(title='Government ideology scale (lagged one year - higher=more liberal)'))
+fig
+fig <- plot_ly(type='histogram', x=df1$govern, nbinsx=40) %>%
+    layout(title='Republican Governors', xaxis=list(title='Republican Governors (1=yes)'))
+fig
+
+```
+
+```{r}
+
+# Factor
+df1$tiss = factor(df1$tiss)
+df1$tisviol = factor(df1$tisviol)
+df1$pre_guid <- factor(df1$pre_guid)
+df1$pre_volg <- factor(df1$pre_volg)
+df1$pre_par <- factor(df1$pre_par)
+df1$rec_sent <- factor(df1$rec_sent)
+df1$presum_s <- factor(df1$presum_s)
+df1$pre_rec_ <- factor(df1$pre_rec_)
+
+# Summary - sentencing vars
+print("")
+print("Summary - sentencing vars")
+summary(df1 %>%
+    select(
+        tisp,
+        tiss,
+        tisviol,
+        pre_guid,
+        pre_volg,
+        pre_par,
+        rec_sent,
+        presum_s,
+        pre_rec_
+    )
+)
+
+# tisp: missing=999
+print(paste('tisp', 'missing', nrow(df1[df1['tisp'] == 999,])))
+
+# tiss: missing=9
+print(paste('tiss', 'missing', nrow(df1[df1['tiss'] == 9,])))
+
+# tisviol: missing=9
+print(paste('tisviol', 'missing', nrow(df1[df1['tisviol'] == 9,])))
+
+```
+
+```{r}
+
+# Histograms - tiss policy
+fig <- plot_ly(type='histogram', x=df1[df1$tisp != 999, 'tisp'], nbinsx=40) %>%
+    layout(title='TIS Policy - % of Sentence', xaxis=list(title='Pct of sentence imposed most offenders required to serve'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$tiss != 9, 'tiss'], nbinsx=40) %>%
+    layout(title='TIS Policy - Min Time Served Requirement', xaxis=list(title='Minimum time served requirement present'))
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$tisviol != 9, 'tisviol'], nbinsx=40) %>%
+    layout(title='TIS Policy - Violent Offenses', xaxis=list(title='Separate time served requred for violent offenses'))
+fig
+
+```
+
+```{r}
+
+fig <- plot_ly(type='histogram', x=df1$pre_guid, nbinsx=40) %>%
+    layout(title='Presumptive Guidelines', xaxis=list(title='Presence of presumptive guidelines'))
+fig
+fig <- plot_ly(type='histogram', x=df1$pre_volg, nbinsx=40) %>%
+    layout(title='Voluntary Guidelines', xaxis=list(title='Presence of voluntary guidelines'))
+fig
+fig <- plot_ly(type='histogram', x=df1$pre_par, nbinsx=40) %>%
+    layout(title='Determinate Sentencing', xaxis=list(title='Presence of determinate sentencing'))
+fig
+fig <- plot_ly(type='histogram', x=df1$rec_sent, nbinsx=40) %>%
+    layout(title='Recommended Sentences', xaxis=list(title='Presence of recommended sentences'))
+fig
+fig <- plot_ly(type='histogram', x=df1$presum_s, nbinsx=40) %>%
+    layout(title='Presumptive Sentences', xaxis=list(title='Presence of presumptive sentences'))
+fig
+fig <- plot_ly(type='histogram', x=df1$pre_rec_, nbinsx=40) %>%
+    layout(title='Presumptive Recommneded Sentences', xaxis=list(title='Presence of presumptive recommended sentences'))
+fig
+
+```
+
+```{r}
+
+# Summary - enhancement vars
+print("")
+print("Summary - enhancement vars")
+summary(df1 %>%
+    select(
+        m1_weap,
+        m2_prox,
+        m3_offic,
+        m4_harm,
+        m5_cont,
+        m6_citi,
+        m7_repe,
+        m8_mult,
+        m9_drug
+    )
+)
+
+```
+
+```{r}
+
+# Summary - mandatory sentences with weapon as trigger
+print("")
+print("Summary - mandatory sentences with weapon as trigger")
+summary(df1 %>%
+    select(
+        m10_we1a,
+        m11_we1b,
+        m12_we1c,
+        m13_we1d,
+        m14_we1e,
+        m15_we1f,
+        m16_we2a,
+        m17_we2b,
+        m18_we2c,
+        m19_we2d,
+        m20_we2e,
+        m21_we2f,
+        m22_we3a,
+        m23_we3b,
+        m24_we3c,
+        m25_we3d,
+        m26_we3e,
+        m27_we3f,
+        m28_we4a,
+        m29_we4b,
+        m30_we4c,
+        m31_we4d,
+        m32_we4e,
+        m33_we4f
+    )
+)
+
+```
+
+```{r}
+
+# Summary - mandatory sentences with drugs as trigger
+print("")
+print("Summary - mandatory sentences with drugs as trigger")
+summary(df1 %>%
+    select(
+        m34_dr1a,
+        m35_dr1b,
+        m36_dr1c,
+        m37_dr1d,
+        m38_dr1e,
+        m39_dr1f,
+        m40_dr2a,
+        m41_dr2b,
+        m42_dr2c,
+        m43_dr2d,
+        m44_dr2e,
+        m45_dr2f,
+        m46_dr3a,
+        m47_dr3b,
+        m48_dr3c,
+        m49_dr3d,
+        m50_dr3e,
+        m51_dr3f
+    )
+)
+
+```
+
+```{r}
+
+# Summary - mandatory sentences with bodily harm as trigger
+print("")
+print("Summary - mandatory sentences with bodily harm as trigger")
+summary(df1 %>%
+    select(
+        m52_vi1a,
+        m53_vi1b,
+        m54_vi1c,
+        m55_vi1d,
+        m56_vi1e,
+        m57_vi1f,
+        m58_vi2a,
+        m59_vi2b,
+        m60_vi2c,
+        m61_vi2d,
+        m62_vi2e,
+        m63_vi2f
+    )
+)
+
+```
+
+
+```{r}
+
+df1 %>%
+    filter(pre_rec_ == 1) %>%
+    group_by(year) %>%
+    summarize(n=n()) %>%
+    ungroup() %>%
+    arrange(year)
+
+df1 %>%
+    filter(tiss == 1) %>%
+    group_by(year) %>%
+    summarize(n=n()) %>%
+    ggplot() +
+    geom_point(aes(x=year, y=n)) +
+    theme_minimal() +
+    ggtitle('Number of states with TIS policy')
+
+df1 %>%
+    filter(tisp != 999) %>%
+    group_by(year) %>%
+    summarize(n=mean(tisp)) %>%
+    ggplot() +
+    geom_point(aes(x=year, y=n)) +
+    theme_minimal() +
+    ggtitle('Mean time served requirement (pct of sentnece)')
+
+
+df1 %>%
+    filter(tiss == 1) %>%
+    group_by(year) %>%
+    summarize(n=n()) %>%
+    ggplot() +
+    geom_point(aes(x=year, y=n)) +
+    theme_minimal() +
+    ggtitle('Number of states with TIS policy')
+
+```
+
+Sentencing	TIS policy	tisp	Pct sentence imposed most offenders required to serve
+Sentencing	TIS policy	tiss	Min time served req'd
+Sentencing	TIS policy	tisviol	Separate time served req for violent offenses
+Sentencing	TIS policy	tisviol	Separate time served req for violent offenses
+Sentencing	Guidelines	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)
+Sentencing	Guidelines	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)
+Sentencing	Guidelines	pre_par	Presence of determinate sentencing (sentences have a defined length)
+Sentencing	Guidelines	rec_sent	Presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)
+Sentencing	Guidelines	presum_s	Presence of presumptive sentences (sentences contained in legislation)
+Sentencing	Guidelines	pre_rec_	Presence of presumptive recommended sentences (assume this means ranges are contained in legislation)
+
+```{r}
+
+vars <- c('tiss', 'tisviol', 'pre_guid', 'pre_volg', 'pre_par', 'rec_sent', 'presum_s', 'pre_rec_')
+dfyr <- df1 %>%
+    select(year) %>%
+    group_by(year) %>%
+    summarize() %>%
+    ungroup()
+df3 <- dfyr
+
+for (v in vars) {
+
+    dftmp <- df1[df1[v] == 1,]
+    dftmp <- dftmp %>%
+        #filter(v == 1) %>%
+        group_by(year) %>%
+        summarize(n=n()) %>%
+        ungroup()
+    dftmp[v] = dftmp['n']
+    dftmp <- dftmp %>% select(-n)
+    df3 <- df3 %>%
+        merge(dftmp, by='year', all.x=T)
+}
+df3 <- gather(df3, key='stat', val='val', -year)
+
+df3 %>%
+    filter(year !=1972) %>%
+    ggplot() +
+    geom_bar(aes(x=year, y=val, fill=stat), stat='identity', position = 'dodge') +
+    theme_minimal()
+
+df4 <- df1 %>%
+    group_by(year, tiss) %>%
+    summarize(n=n(), mean_tisp=mean(tisp))
+
+df5 <- df1 %>%
+    filter(year == 1999) %>%
+    select(state_na, tiss, tisviol, tisp, pre_guid, pre_volg, pre_par, rec_sent, presum_s, pre_rec_)
+
+df6 <- df1 %>%
+    mutate(fed=ifelse(tisp>=85, 1, 0)) %>%
+    group_by(year, fed) %>%
+    summarize(n=n()) %>%
+    ungroup() %>%
+    spread(key=fed, value=n)
+
+df7 <- df1 %>%
+    mutate(tmpviol=ifelse(m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1, 1, 0)) %>%
+    group_by(year, tmpviol) %>%
+    summarize(n=n()) %>%
+    ungroup() %>%
+    spread(key=tmpviol, value=n, sep='=')
+
+df7b <- df1 %>%
+    #filter(tisp != 0) %>%
+    mutate(tmpviol=ifelse(m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1, 1, 0)) %>%
+    #mutate(tmpmo=mean(m15_we1f) + mean(m21_we2f) + mean(m27_we3f) + mean(m33_we4f) + mean(m57_vi1f) + mean(m63_vi2f)) %>%
+    mutate(tmpagg=ifelse(pre_guid==1 | pre_volg==1 | pre_par==1 | rec_sent==1 | presum_s==1 | pre_rec_==1, 1, 0)) %>%
+    group_by(year, pre_par) %>%
+    summarize(meantisp=mean(tisp), .groups='keep') %>%
+    ungroup() %>%
+    spread(key=pre_par, value=meantisp, sep='=')
+
+```
+
+## References
 
 Stemen, D. _Impact of State Sentencing Policies on Incarceration Rates in the United States, 1975-2002 (ICPSR 4456)._ (2007, September 27). Inter-university Consortium for Political and Social Research. https://www.icpsr.umich.edu/web/NACJD/studies/4456
 
@@ -35,7 +618,6 @@ _State Good Time and Earned Time Laws (2021, June 11)._ National Conference of S
 
 _Know More: Truth-in-Sentencing._ (2020). Restore Justice Foundation. https://www.restorejustice.org/about-us/resources/know-more/know-more-truth-in-sentencing/
 
+_Federal Sentencing Guidelines: Background, Legal Analysis, and Policy Options_ (2009, March 16). EveryCRSReport. https://www.everycrsreport.com/reports/RL32766.html
 
-```{r}
-
-```
+_Metadata Glossary_ (2023). World Bank, https://databank.worldbank.org/metadataglossary/gender-statistics/series/SI.POV.GINI.

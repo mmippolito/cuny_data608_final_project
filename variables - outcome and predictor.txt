@@ -1,0 +1,85 @@
+The dataset contains outcome variables, control variables, and policy variables.
+
+The outcome variables pertain to the 
+
+change and growth in state-level incarceration rates between 1975 and 2002
+
+Control variables include
+
+violent crime rate
+property crime rate
+percent population between ages of 18-24
+percent population between ages of 25-34
+percent population African American
+percent population of Hispanic origin
+percent population living in urban areas
+percent adherents to "fundamentalist" religion
+income per capita
+unemployment rate
+percent population below poverty level
+GINI income distribution coefficient
+state revenues per 100,000 residents
+public welfare per 100,000 residents
+police officers per 100,000 residents
+drug arrest rate
+corrections expenditures per 100,000 residents
+citizen political ideology
+government political ideology
+governor's party affiliation
+region
+
+Policy variables capture information regarding 
+
+sentencing structure
+drug policy
+time served requirements
+habitual offender laws (HOL)
+mandatory sentences
+
+Specifically, sentencing structure variables include information on 
+
+determinate sentencing
+structured sentencing
+presumptive sentencing guidelines
+voluntary sentencing guidelines
+presumptive sentencing
+
+[
+	Sentencing	Guidelines	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)
+	Sentencing	Guidelines	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)
+	Sentencing	Guidelines	pre_par	Presence of determinate sentencing (sentences have a defined length)
+	Sentencing	Guidelines	rec_sent	Presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)
+	Sentencing	Guidelines	presum_s	Presence of presumptive sentences (sentences contained in legislation)
+	Sentencing	Guidelines	pre_rec_	Presence of presumptive recommended sentences (assume this means ranges are contained in legislation)
+]
+
+Drug policy variables include 
+
+sentencing enhancement score (cocaine, heroin, and marijuana)
+severity levels for possession and sale (cocaine, heroin, and marijuana)
+minimum sentence for 28 grams of cocaine (sale)
+maximum sentence for the lowest quantity of cocaine (possession)
+minimum sentence for 28 grams of heroin (sale)
+maximum sentence for the lowest quantity of heroin (possession)
+minimum sentence for 500 grams of marijuana (sale)
+minimum sentence for the lowest quantity of marijuana (possession)
+
+Variables regarding time served requirements include both
+
+time served (all offenses)
+time served (violent offenses)
+
+The habitual offender laws variables capture information regarding the
+
+two-strikes law
+three-strikes law
+HOL targeted for violent offenses
+HOL targeted for drug offenses
+
+Lastly, variables pertaining to mandatory sentences include
+
+number of mandatory minimums for weapons use
+number of mandatory minimums for violent offenses
+number of mandatory minimums for offenses against protected individuals
+number of mandatory minimums for offenses committed while in state custody
+mandatory score

@@ -1,0 +1,162 @@
+Outcome vars:
+  inc_rate	incarceration rate per 100,000 residents
+  lag_incr	incarc rate lagged 1 yr
+  d_inc_ra	difference in incarc rate (t1) - incarc rate (t0)
+  admissio	prison admissions
+  adm_100k	prison admissions per 100k res
+  ncourtc	new court commitments
+  court_10	court commitments per 100k res
+  drug_arr	rate of drug arrests lagged 1 yr (arrests per pop)
+  pro_drug	drug arrests 3-yr avg (drug arrests/total arrests)
+  cri_l1	crime rate lagged 1 yr
+  vio_l1	violent crime rate lagged 1 yr
+  pro_crim	property crime rate lagged 1yr
+
+Control vars:
+  state_na	state name
+  south			southern state
+  west			western state
+  east			eastern state
+  midwest		midwestern state
+  year		year
+  pop_l1	population (thousands) lagged 1yr
+  incpc_l1	income per capita lagged 1 yr
+  p_1824_l	pct pop 18-24 lagged 1 yr
+  p_25_34_	pct pop 25-34 lagged 1 yr
+  p_black_  pct black pop lagged 1 yr
+  p_hisp_l	pc hispanic pop lagged 1 yr
+  metro_l1	pct pop living in metro areas lagged 1 yr
+  poverty_	poverty rate lagged 1 yr (census cps historic)
+  unemp_l1	unemployement rate (not seasonally adj) lagged 1 yr
+  rev_l2_1	state revenues per 100,000 res in constant US$ lagged 2 yrs
+  wel_l1_1	expenditure on public welfare per 100,000 res in constant US$ lagged 1 yr
+  gini		gini coeffic for families (us census) - lower values=more equally distributed income
+  expcorr_	direct expenditure on corrections constant US$ lagged 1 yr
+  correxp_	corrections expenditure per capita
+  pol_100k	full-time equiv police offic per 100k residents
+  religion	fundamentalist religion
+  ideo2		citizen ideology scale lagged 1 yr (higher=more liberal)
+  gov2		gov't/instit ideology scale lagged 1 yr (higher=more liberal)
+  govern	republican governor (1=yes)
+
+Policy vars (1=yes):
+  tisp		pct sentence imposed most offenders required to serve
+  tiss		min time served req'd
+  tisviol	separate time served req for violent offenses
+
+Sentencing structure guideline vars (1=yes):
+  pre_guid	presence of presumptive guidelines (guidelines contained in legislation)
+  pre_volg	presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)
+  pre_par	presence of determinate sentencing (sentences have a defined length)
+  rec_sent	presence of recommended sentences (assume this means indeterminate sentencing, i.e. has a range)
+  presum_s	presence of presumptive sentences (sentences contained in legislation)
+  pre_rec_	presence of presumptive recommended sentences (assume this means ranges are contained in legislation)
+
+Enhancement vars (1=yes):
+  m1_weap	total enhancements with weapons as trigger
+  m2_prox	total enhancements with proximity as trigger
+  m3_offic	total enhancements with assault of peace officer as trigger
+  m4_harm	total enhancements with bodily harm & agg assault as trigger
+  m5_cont	total enhancements with violation of supervision as trigger
+  m6_citi	total enhancementw with protected populations as trigger
+  m7_repe	total enhancements with repeated offender as trigger
+  m8_mult	total enhancements with multiple victims as trigger
+  m9_drug	total enhancements with durg quantity as trigger
+  m10_we1a	presence of mandatory sentence: trigger: against cop/corrections; offense: ?
+  m11_we1b		requires underlying sentence
+  m12_we1c		requires judge to impose sentence
+  m13_we1d		mandatory sentence affects release
+  m14_we1e		type of mandatory sentence
+  m15_we1f		min sentencence (months)
+  m16_we2a	presence of mandatory sentence: trigger: weapon; offense: rape
+  m17_we2b		requires underlying sentence
+  m18_we2c		requires judge to impose sentence
+  m19_we2d		mandatory sentence affects release
+  m20_we2e		type of mandatory sentence
+  m21_we2f		min sentencence (months)
+  m22_we3a	presence of mandatory sentence: trigger: weapon: offense: robbery
+  m23_we3b		requires underlying sentence
+  m24_we3c		requires judge to impose sentence
+  m25_we3d		mandatory sentence affects release
+  m26_we3e		type of mandatory sentence
+  m27_we3f		min sentencence (months)
+  m28_we4a	presence of mandatory sentence: trigger: weapon: offense: burglary
+  m29_we4b		requires underlying sentence
+  m30_we4c		requires judge to impose sentence
+  m31_we4d		mandatory sentence affects release
+  m32_we4e		type of mandatory sentence
+  m33_we4f		min sentencence (months)
+  m34_dr1a	presence of mandatory sentence: trigger: repeated offender: offense: drug poss
+  m35_dr1b		requires underlying sentence
+  m36_dr1c		requires judge to impose sentence
+  m37_dr1d		mandatory sentence affects release
+  m38_dr1e		type of mandatory sentence
+  m39_dr1f		min sentencence (months)
+  m40_dr2a	presence of mandatory sentence: trigger: firearm: offense: drug sale
+  m41_dr2b		requires underlying sentence
+  m42_dr2c		requires judge to impose sentence
+  m43_dr2d		mandatory sentence affects release
+  m44_dr2e		type of mandatory sentence
+  m45_dr2f		min sentencence (months)
+  m46_dr3a	presence of mandatory sentence: trigger: age-specific victim: offense: drug sale
+  m47_dr3b		requires underlying sentence
+  m48_dr3c		requires judge to impose sentence
+  m49_dr3d		mandatory sentence affects release
+  m50_dr3e		type of mandatory sentence
+  m51_dr3f		min sentencence (months)
+  m52_vi1a	presence of mandatory sentence: trigger: bodily harm: offense: robbery
+  m53_vi1b		requires underlying sentence
+  m54_vi1c		requires judge to impose sentence
+  m55_vi1d		mandatory sentence affects release
+  m56_vi1e		type of mandatory sentence
+  m57_vi1f		min sentencence (months)
+  m58_vi2a	presence of mandatory sentence: trigger: bodily harm: offense: burglary
+  m59_vi2b		requires underlying sentence
+  m60_vi2c		requires judge to impose sentence
+  m61_vi2d		mandatory sentence affects release
+  m62_vi2e		type of mandatory sentence
+  m63_vi2f		min sentencence (months)
+
+Drug policy vars:
+  dr_0a			# of sev levels for cocaine poss
+  dr_0b			# of sev levels for cocaine sale
+  mar_spos		# of sev levels for marijuana poss
+  mar_ssal		# of sev levels for marijuana sale
+  her_spos		# of sev levels for heroin poss
+  her_ssal		# of sev levels for heroin sale
+  dr_1a			cocaine poss: max sent for min quantity (mo)
+  dr_1b			cocaine sale: max sent for min quantity (mo)
+  dr_2a			cocaine poss: min sent for 28oz or most similar quant (mo)
+  dr_2b			cocaine sale: min sent for 28oz or most similar quant (mo)
+  he_min1o		heroin poss: min sent for 1 oz or most similar quant (mo)
+  he_min_1		heroin sale: min sentece for 1 oz or most similar quantity (mo)
+  mar_min_		marijuana poss: min sent for 1 lb or equiv (mo)
+  mar_mi_1		marijuana sale: min sent for 1 lb or equiv (mo)
+  dr_3coc		# of sent enh for cocaine (1=sale, 2=poss, 3=both)
+  dr_3mar		# of sent enh for marijuana  (1=sale, 2=poss, 3=both)
+  dr_3oth		# of sent enh for other drugs (1=sale, 2=poss, 3=both)
+
+Habitual offender law vars:
+  hol_drug		pres of habitual off laws for drug offenders
+  hol_vio		pres of habitual off laws for violent offenders
+  hol_sex		pres of habitual off laws for sex off
+  hol_2str		pres of 2-strikes law
+  hol2_pro			all prior felony offense qualify
+  hol2_cuo			all current felony offenses qualify
+  hol2_alt			statute req judge to alter sent
+  hol2_man			mandatory incarc
+  hol2_st1			sentence varies by offense
+  hol2_st2			life is max avail for most serious offense class
+  hol2_st3			max sent for lowest felony class (mo)
+  prior2			prior conviction triggers law
+  time_fr2			undeterminate time frame for previous offenses
+  hol_3str		pres of 3-strikes law
+  hol3_pro			all prior felony offense qualify
+  hol3_cuo			all current felony offenses qualify
+  hol3_alt			statute req judge to alter sent
+  hol3_man			mandatory incarc
+  hol3_st1			sentence varies by offense
+  hol3_st2			life is max avail for most serious offense class
+  hol3_st3			max sent for lowest felony class (mo)
+  prior3			prior conviction triggers law
+  time_fr3			undeterminate time frame for previous offenses
