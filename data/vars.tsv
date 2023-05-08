@@ -39,6 +39,7 @@ Control	Corrections	pol_100k	Full-time equiv police offic per 100k residents	-1	
 Sentencing	TIS policy	tisp	Pct sentence imposed most offenders required to serve	999	quant
 Sentencing	TIS policy	tiss	Minimum time served requirements	9	cat
 Sentencing	TIS policy	tisviol	Separate time served required for violent offenses	9	cat
+Sentencing	TIS policy	tisviol_agg	Mandatory sentencing for violent offenses	9	cat
 Sentencing	Sentencing structure	pre_guid	Presence of presumptive guidelines (guidelines contained in legislation)	9	cat
 Sentencing	Sentencing structure	pre_volg	Presence of voluntary guidelines (judges only use sentences as a guideline but can depart from them)	9	cat
 Sentencing	Sentencing structure	pre_par	Presence of determinate sentencing (sentences have a defined length)	9	cat
@@ -125,6 +126,8 @@ Drug policy	Max/Min sentences	mar_mi_1	Marijuana sale: min sentence for 1 lb or 
 Drug policy	Sentence enhancements	dr_3coc	# of sentence enhancements for cocaine (1=sale, 2=poss, 3=both)	99	quant
 Drug policy	Sentence enhancements	dr_3mar	# of sentence enhancements for marijuana (1=sale, 2=poss, 3=both)	99	quant
 Drug policy	Sentence enhancements	dr_3oth	# of sentence enhancements for other drugs (1=sale, 2=poss, 3=both)	99	quant
+Habitual offender	Presence of HOL	hol_2str2	Presence of two-strikes law	9	cat
+Habitual offender	Presence of HOL	hol_3str2	Presence of three-strikes law	9	cat
 Habitual offender	Presence of HOL	hol_drug	Presence of habitual offender laws for drug offenders	9	cat
 Habitual offender	Presence of HOL	hol_vio	Presence of habitual offender laws for violent offenders	9	cat
 Habitual offender	Presence of HOL	hol_sex	Presence of habitual offender laws for sex offenders	9	cat
