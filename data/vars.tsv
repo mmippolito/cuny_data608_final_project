@@ -5,8 +5,8 @@ Outcome	Incarceration rate	d_inc_ra	Difference in incarc rate (t1) - incarc rate
 Outcome	Prison admissions	admissio	Prison admissions	999999	quant
 Outcome	Prison admissions	adm_100k	Prison admissions per 100k res	999	quant
 Outcome	Court commitments	ncourtc	New court commitments	99999	quant
-Outcome	Court commitments	court_10	Court commitments per 100k res	999	quant
-Outcome	Drug arrests	drug_arr	Rate of drug arrests lagged 1 yr (arrests per pop)	9999	quant
+Outcome	Court commitments	court_10	Court commitments per 100k residents	999	quant
+Outcome	Drug arrests	drug_arr	Rate of drug arrests lagged 1 yr (arrests per capita)	9999	quant
 Outcome	Drug arrests	pro_drug	Drug arrests 3-yr avg (drug arrests/total arrests)	9	quant
 Outcome	Crime rates	cri_l1	Crime rate lagged 1 yr	-1	quant
 Outcome	Crime rates	vio_l1	Violent crime rate lagged 1 yr	-1	quant
