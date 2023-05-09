@@ -1,16 +1,16 @@
 cat	subcat	var	descr	missing	vartype
 Outcome	Incarceration rate	inc_rate	Incarceration rate per 100,000 residents	-1	quant
-Outcome	Incarceration rate	lag_incr	Incarceration rate lagged 1 yr	999	quant
-Outcome	Incarceration rate	d_inc_ra	Difference in incarc rate (t1) - incarc rate (t0)	999	quant
+Unused	Incarceration rate	lag_incr	Incarceration rate lagged 1 yr	999	quant
+Unused	Incarceration rate	d_inc_ra	Difference in incarc rate (t1) - incarc rate (t0)	999	quant
 Outcome	Prison admissions	admissio	Prison admissions	999999	quant
-Outcome	Prison admissions	adm_100k	Prison admissions per 100k res	999	quant
+Outcome	Prison admissions	adm_100k	Prison admissions per 100k residents	999	quant
 Outcome	Court commitments	ncourtc	New court commitments	99999	quant
 Outcome	Court commitments	court_10	Court commitments per 100k residents	999	quant
 Outcome	Drug arrests	drug_arr	Rate of drug arrests lagged 1 yr (arrests per capita)	9999	quant
 Outcome	Drug arrests	pro_drug	Drug arrests 3-yr avg (drug arrests/total arrests)	9	quant
 Outcome	Crime rates	cri_l1	Crime rate lagged 1 yr	-1	quant
-Outcome	Crime rates	vio_l1	Violent crime rate lagged 1 yr	-1	quant
 Outcome	Crime rates	pro_crim	Property crime rate lagged 1yr	-1	quant
+Outcome	Crime rates	vio_l1	Violent crime rate lagged 1 yr	-1	quant
 Control	Geography	state_na	State name	-1	cat
 Control	Geography	south	Southern state	-1	cat
 Control	Geography	west	Western state	-1	cat

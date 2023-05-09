@@ -6,6 +6,7 @@ import pandas as pd
 import plotly.express as px
 import plotly
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 import re
 import sys
 import time
@@ -18,11 +19,15 @@ if offline:
 	url_vars = 'data/vars.tsv'
 	url_abbr = 'data/state_abbr.csv'
 	url_data1 = 'data/04456-0001-Data.tsv'
+	url_pred = 'data/predicted.csv'
+	url_cat = 'data/cat.csv'
 	imgPath = 'https://github.com/mmippolito/cuny_data608_final_project/raw/main/'
 else:
 	url_vars = 'https://raw.githubusercontent.com/mmippolito/cuny_data608_final_project/main/data/vars.tsv'
 	url_abbr = 'https://raw.githubusercontent.com/mmippolito/cuny_data608_final_project/main/data/state_abbr.csv'
 	url_data1 = 'https://raw.githubusercontent.com/mmippolito/cuny_data608_final_project/main/data/04456-0001-Data.tsv'
+	url_pred = 'https://raw.githubusercontent.com/mmippolito/cuny_data608_final_project/main/data/predicted.csv'
+	url_cat = 'https://raw.githubusercontent.com/mmippolito/cuny_data608_final_project/main/data/cat.csv'
 	imgPath = 'https://github.com/mmippolito/cuny_data608_final_project/raw/main/'
 
 # Set dash app
@@ -41,6 +46,13 @@ def load_data(url, sep):
 	# Return dataframe
 	return df
 
+# Define function to populate category dropdown list
+def populate_cat_dd():
+
+	# Populate dategory dropdown list
+	d = {dfcat.iloc[x]['title']: dfcat.iloc[x]['title'] for x in range(0, dfcat.shape[0])}
+	return d
+
 # Define function to populate dropdown list based on a category of variable
 def populate_dd(cat, subcat):
 
@@ -55,44 +67,77 @@ def populate_dd(cat, subcat):
 	return d
 
 # General function to update graph, called from callback function
-def update_gr_general(outcome_var, indep_var):
+def update_gr_general(outcome_var, indep_var, chk):
 
+	# Copy chk_options
+	#chk_options2 = chk_options.copy()
+
+	# Check for error
 	if outcome_var is None or indep_var is None:
 		print('returning empty dict')
-		return {}
+		return {}, {}, chk_options
 
 	# Find missing value [value]
 	miss_outcome = dfvar[dfvar['var'] == outcome_var]['missing'].values[0]
 	miss_indep = dfvar[dfvar['var'] == indep_var]['missing'].values[0]
 
 	# Fetch data
-	dfplot1 = df1[(df1[outcome_var] != miss_outcome) & (df1[indep_var] != miss_indep)]
-	
-	# Display plot
+	dfplot1 = df1[(df1[outcome_var] != miss_outcome) & (df1[indep_var] != miss_indep) & (df1[indep_var] != 'na')]
+
+	# Plot
 	if dfvar[dfvar['var'] == indep_var]['vartype'].values[0] == 'cat':
-		#fig1 = px.box(dfplot1, x=indep_var, y=outcome_var, color='year', width=800, height=400)
-		fig1 = px.box(dfplot1, x='year', y=outcome_var, color=indep_var, width=800, height=400, points='outliers', color_discrete_sequence=['burlywood', 'cadetblue'])
+		#chk_options2[0]['label'] = 'Flip categories'
+		if len(chk) > 0:
+			fig1 = px.box(dfplot1, x=indep_var, y=outcome_var, color='year', width=500, height=400, points='outliers', \
+				color_discrete_sequence=['burlywood', 'darkgoldenrod', 'chocolate', 'cornflowerblue', 'cadetblue', 'darkgreen', 'darkorchid', 'darkmagenta', 'crimson', 'deeppink'])
+		else:
+			fig1 = px.box(dfplot1, x='year', y=outcome_var, color=indep_var, width=500, height=400, points='outliers', \
+				color_discrete_sequence=['burlywood', 'cadetblue'])
 	else:
-		fig1 = px.scatter(dfplot1, x=indep_var, y=outcome_var, color='year', width=800, height=400, color_continuous_scale='deep_r')
+		#chk_options2[0]['label'] = 'Show trendline'
+		if len(chk) > 0:
+			fig1 = px.scatter(dfplot1, x=indep_var, y=outcome_var, color='year', width=500, height=400, color_continuous_scale='deep_r', trendline="ols")
+		else:
+			fig1 = px.scatter(dfplot1, x=indep_var, y=outcome_var, color='year', width=500, height=400, color_continuous_scale='deep_r')
 	fig1.update_xaxes(mirror=False, showline=True, ticks='outside', linecolor='black', gridcolor='lightgrey', title=dfvar[dfvar['var'] == indep_var]['descr'].values[0])
 	fig1.update_yaxes(mirror=False, showline=True, ticks='outside', linecolor='black', gridcolor='lightgrey', title=dfvar[dfvar['var'] == outcome_var]['descr'].values[0])
 	fig1.update_layout(title='', plot_bgcolor='white')
 
-	# Return
-	return fig1
+	# Display map
+	dfplot1 = dfplot1[dfplot1['year'] == 2002]
+	if dfvar[dfvar['var'] == indep_var]['vartype'].values[0] == 'cat':
+		fig2 = px.choropleth(dfplot1, locations='state_ab', locationmode='USA-states', scope='usa', color=indep_var, color_discrete_sequence=['cadetblue', 'cornsilk'], width=500)
+	else:
+		fig2 = px.choropleth(dfplot1, locations='state_ab', locationmode='USA-states', scope='usa', color=indep_var, color_continuous_scale='deep', width=500)
+	fig2.update_layout(
+		plot_bgcolor='white',
+		title={'text': dfvar[dfvar['var'] == indep_var]['descr'].values[0] + ' - 2002', 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9, 'font': {'family': 'Calibri', 'size': 14}}
+	)
+
+	# Return plot
+	return fig1, fig2, chk_options
 
 #-----------------------------------------------------
 
 # Load data
 dfvar = load_data(url_vars, '\t')
 dfabbr = load_data(url_abbr, ',')
-df1_raw = load_data(url_data1, '\t')
+df1 = load_data(url_data1, '\t')
+dfpred = load_data(url_pred, ',')
+dfcat = load_data(url_cat, ',')
+
+# Set checklist options
+chk_options = [{'label': 'Set option', 'value': 1, 'disabled': False}]
 
 # Merge state abbreviations
-df1 = pd.merge(df1_raw, dfabbr, on='state_na', how='inner')
-
+df1 = pd.merge(df1, dfabbr, on='state_na', how='inner')
+dfpred = pd.merge(dfpred, dfabbr, on='state_na', how='inner')
 # Create dict for year slider
 d_yr = {str(x): str(x) for x in df1['year'].unique()}
+
+# Copy HOL variables to second subcategory
+df1['hol_2str2'] = df1['hol_2str']
+df1['hol_3str2'] = df1['hol_3str']
 
 # Factorize
 df1['tiss'] = np.where(df1['tiss']==0, 'no', np.where(df1['tiss']==1, 'yes', 'na'))
@@ -104,14 +149,22 @@ df1['pre_par'] = np.where(df1['pre_par']==0, 'no', np.where(df1['pre_par']==1, '
 df1['rec_sent'] = np.where(df1['rec_sent']==0, 'no', np.where(df1['rec_sent']==1, 'yes', 'na'))
 df1['presum_s'] = np.where(df1['presum_s']==0, 'no', np.where(df1['presum_s']==1, 'yes', 'na'))
 df1['pre_rec_'] = np.where(df1['pre_rec_']==0, 'no', np.where(df1['pre_rec_']==1, 'yes', 'na'))
+df1['hol_2str2'] = np.where(df1['hol_2str2']==0, 'no', np.where(df1['hol_2str2']==1, 'yes', 'na'))
+df1['hol_3str2'] = np.where(df1['hol_3str2']==0, 'no', np.where(df1['hol_3str2']==1, 'yes', 'na'))
+df1['hol_drug'] = np.where(df1['hol_drug']==0, 'no', np.where(df1['hol_drug']==1, 'yes', 'na'))
+df1['hol_vio'] = np.where(df1['hol_vio']==0, 'no', np.where(df1['hol_vio']==1, 'yes', 'na'))
+df1['hol_sex'] = np.where(df1['hol_sex']==0, 'no', np.where(df1['hol_sex']==1, 'yes', 'na'))
 
 # Set aggregated policy data - c('tiss', 'tisviol', 'pre_guid', 'pre_volg', 'pre_par', 'rec_sent', 'presum_s', 'pre_rec_')
 df1.loc[:, 'policy_agg'] = np.where((df1['pre_guid']=='yes') | (df1['pre_volg']=='yes') | (df1['pre_par']=='yes') | \
 	(df1['rec_sent']=='yes') | (df1['presum_s']=='yes') | (df1['pre_rec_']=='yes'), 'yes', 'no')
 
-# Set aggregated tiss for violent offenders - m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1
+# Set aggregated mandatory sentencing for violent offenders - m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1
 df1.loc[:, 'tisviol_agg'] = np.where((df1['m10_we1a']==1) | (df1['m16_we2a']==1) | (df1['m22_we3a']==1) | \
 	(df1['m28_we4a']==1) | (df1['m52_vi1a']==1) | (df1['m58_vi2a']==1), 'yes', 'no')
+
+# Mean incarceration rates
+df_inc = df1.groupby(['year'], as_index=False).agg({'inc_rate': 'mean'})
 
 #-----------------------------------------------------
 
@@ -131,11 +184,14 @@ app.layout = html.Div(
 					html.P('CUNY DATA608', style={'font-weight': 'bold', 'font-size': '14px', 'margin': '0', 'padding': '0', 'text-align': 'left'}),
 					html.P('May 2023', style={'font-weight': 'bold', 'font-size': '14px', 'margin': '0', 'padding': '0', 'text-align': 'left'}),
 					html.Br(),
-					html.Img(src=imgPath + 'img_prison.jpg', height='420px'),
+					html.Img(src=imgPath + 'img_prison.jpg', height='360px'),
 					html.Br(),
 					html.Br(),
 					html.P('An Uneven System', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
-					html.P('Before the 1990s, many prisoners incarcerated in the US criminal justice system only served a fraction of their sentence, often being released for good behavior or other mitigating factors. These factors were applied unevenly at the discretion of parole boards. Public pressure led to the passage of the Violent Crime Control and Enforcement Act (VCCLEA) in 1994, which gave incentives to states that required prisoners to serve at least 85% of their sentence.', 
+					html.P("Before the 1990s, many prisoners incarcerated in the US criminal justice system only served a fraction of their sentence, often being released for good behavior or other mitigating factors. These factors were applied unevenly at the discretion of parole boards. Public pressure led to the passage of the Violent Crime Control and Law Enforcement Act (VCCLEA) in 1994, which gave incentives to states that required prisoners to serve at least 85% of their sentence. These so-called truth-in-sentencing (TIS) laws are still heavily debated.", 
+						style={'font-size': '14px', 'text-align': 'left'}
+					),
+					html.P("We'll examine various aspects of TIS, first by looking at when TIS laws were adopted state by state. Then we'll see what factors affect various outcome variables such as incarceration and crime rates. Lastly, we'll evaluate whether TIS is having its desired effect.", 
 						style={'font-size': '14px', 'text-align': 'left'}
 					),
 				], style={'border': 'none', 'padding': '0px', 'text-align': 'center'}, colSpan=2),
@@ -146,28 +202,28 @@ app.layout = html.Div(
 			############################
 			html.Tr([
 				html.Td([
-					html.Label(id='lbl_map_title', children=['Truth-in-Sentencing Policies'])
+					html.Label(id='lbl_map_title', children=['Truth-in-Sentencing Policies Over the Years'])
 				], style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=2),
 			], style={'border': 'none', 'padding': '0px'}),
 			html.Tr([
 				html.Td([
-					dcc.Graph(id='gr_map1')
-				], style={'border': 'none', 'padding': '0px'}),
+					dcc.Graph(id='gr_map1', style={'width': '600px'})
+				], style={'border': 'none', 'padding': '0px'}, colSpan=1),
 				html.Td([
-					dcc.Graph(id='gr_map2')
-				], style={'border': 'none', 'padding': '0px'})
+					dcc.Graph(id='gr_map2', style={'width': '600px'})
+				], style={'border': 'none', 'padding': '0px'}, colSpan=1)
 			], style={'border': 'none', 'padding': '1px'}),
 			html.Tr([
 				html.Td([
-					dcc.Graph(id='gr_map3')
-				], style={'font-size': '14px', 'border': 'none', 'padding': '1px'}, colSpan=2),
+					dcc.Graph(id='gr_map3', style={'width': '600px'})
+				], style={'font-size': '14px', 'border': 'none', 'padding': '1px'}, colSpan=1),
 			], style={'border': 'none', 'padding': '0px'}),
 			html.Tr([
 				html.Td([
 					dcc.Slider(id='sl_year', min=1975, max=2002, step=3, value=1975, marks=d_yr, updatemode='drag')
 					#html.Button(id='but_play', value='Play', n_clicks=0, disabled=False),
 					#dcc.Interval(id="ani_map", disabled=True)
-				], style={'border': 'none', 'padding': '1px', 'text-align': 'left'}, colSpan=2)
+				], style={'border': 'none', 'padding': '1px', 'text-align': 'left'}, colSpan=1)
 			], style={'border': 'none', 'padding': '1px'}),
 			html.Tr([
 				html.Td([
@@ -181,33 +237,60 @@ app.layout = html.Div(
 			], style={'border': 'none', 'padding': '0px'}),
 			html.Tr([
 				html.Td([
+					html.Table([
 
 						############################
-						# TIS
+						# Pros & Cons
 						############################
 						html.Tr([
 							html.Td([
 								html.Img(src=imgPath + 'img_tis.jpg', height='200px'),
-								html.P('Is TIS working?', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
+								html.P('Pros and "Cons"', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
 								html.P("Arguments leading to passage of the VCCEA included that truth in sentencing (TIS) laws would deter future criminal behavior, would render justice to the perpetrator for the crime commited, and that time served would theoretically be unbiased and no longer at the whim of a parole board. Opponents of TIS argue that TIS leads to prison overcrowding, that the cost of incarcerating prisoners longer could be better spent on crime prevention programs, that it disincentivizes good behavior, and that it in fact does not serve as a deterrent to future crime. Further, it leaves judges no room in weighing extenuating factors when rendering a sentence.", 
 									style={'font-size': '14px', 'text-align': 'left'}
 								),
-								html.P('Effect on Incarceration Rate', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("At the heart of the argument is whether TIS is having any effect on crime or incarceration rates. As shown below, the statistics seem to indicate that states with more strigent TIS policies tend to see higher rates of both crime and incarceration. If these policies inherently led to higher rates of incarceration, it would be natural to expect a corresponding trend in new court commitments. Since this isn't the case, one might reasonably conclude that TIS policies have, at best, no effect on the incarceration rate and, at worst, a negative impact.", 
+								html.Br()
+							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=4)
+						], style={'border': 'none'}),
+
+						############################
+						# Factors
+						############################
+						html.Tr([
+							html.Td([
+								html.P('What factors affect incarceration rate?', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
+								html.P("Obviously this is a complex issue with a number of factors at play, ranging from socio-economic factors to spending on law enforcement. We'll examine some of these influencing factors, starting with the one with the most direct influence: truth-in-sentencing policies.", 
 									style={'font-size': '14px', 'text-align': 'left'}
 								),
+								html.Td([
+									dcc.Dropdown(
+										options=populate_cat_dd(), 
+										value='TIS Policies', 
+										placeholder='Select a category', 
+										id='dd_cat', 
+										style={'width': '400px', 'font-size': '12px'}
+									)
+								], style={'border': 'none', 'padding': '0px'}),
+								html.Br(),
+								html.Img(id='img_dyn', src='', height='200px'),
+								html.P(id='p_title_dyn', children='', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
+								html.P(id='p_text_dyn', children='', style={'font-size': '14px', 'text-align': 'left'}),
 								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
+							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=4)
+						], style={'border': 'none'}),
+						html.Tr([
 							html.Td([
 								html.Label(['Outcome:'])
 							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
 							html.Td([
 								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
+							], style={'border': 'none', 'padding': '1px'}),
 							html.Td([
-								html.Label(['TIS Policy:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
+								html.Label(id='lbl_dyn', children='')
+							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
+							html.Td([
+								html.Label([''])
+							], style={'border': 'none', 'padding': '1px'})
 						], style={'border': 'none'}),
 						html.Tr([
 							html.Td([
@@ -215,55 +298,74 @@ app.layout = html.Div(
 									options=populate_dd('Outcome', '.'), 
 									value='inc_rate', 
 									placeholder='Select an outcome variable', 
-									id='dd_outcome_tis', 
+									id='dd_outcome_dyn', 
+									style={'width': '400px', 'font-size': '12px'}
+								)
+							], style={'border': 'none', 'padding': '0px'}),
+							html.Td([
+								dcc.Checklist(
+									options=chk_options,
+									value=[],
+									id='chk_dyn',
+									style={'font-size': '14px'}
+								)
+							], style={'width': '90px', 'border': 'none', 'padding': '1px'}),
+							html.Td([
+								dcc.Dropdown(
+									options={}, 
+									value='', 
+									placeholder='Select a variable', 
+									id='dd_indep_dyn', 
 									style={'width': '400px', 'font-size': '12px'}
 								)
 							], style={'border': 'none', 'padding': '0px'}),
 							html.Td([
 								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Sentencing', 'TIS policy'), 
-									value='tisp', 
-									placeholder='Select a variable', 
-									id='dd_indep_tis', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'})
+							], style={'width': '40px', 'border': 'none', 'padding': '1px'})
 						], style={'border': 'none', 'padding': '0px'}),
 						html.Tr([
 							html.Td([
-								dcc.Graph(id='gr_tis', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
+								dcc.Graph(id='gr_dyn', style={'width': '500px'})
+							], style={'border': 'none', 'padding': '0px'}, colSpan=2),
+							html.Td([
+								dcc.Graph(id='map_dyn', style={'width': '500px'})
+							], style={'border': 'none', 'padding': '0px'}, colSpan=2)
 						], style={'border': 'none', 'padding': '0px'}),  #tr
 						html.Tr([
 							html.Td([
 								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
+							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=4)
 						], style={'border': 'none', 'padding': '0px'}),
 
 						############################
-						# Sentencing structure
+						# Is TIS working?
 						############################
 						html.Tr([
 							html.Td([
-								html.P('Sentencing Structure', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("Like TIS policies, codified sentence structures don't necessarily correspond to lower incarceration and/or crime rates. A number of sentencing structures were examined, including presumptive sentencing (those which are codified into law) and determinate sentencing (sentencing with a defined length of time). It can be seen below that states with determinate sentencing have comparable incarceration rates but higher crime rates.", 
+								html.Img(src=imgPath + 'img_tis_effect.jpg', height='200px'),
+								html.P('Is TIS working?', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
+								html.P("The question of whether TIS is having the desired effect is complex and varies greatly depending on ideology. For some, TIS is an attempt at detering crime while applying justice fairly and equally. For others, the goal may be less about deterrence and more about rendering sentencing. For those in the latter camp, incarceration and/or crime rates may not even be considered factors of success, with the only goal being to increase sentence lengths.", 
+									style={'font-size': '14px', 'text-align': 'left'}
+								),
+								html.P("Regardless of ideology, we can examine trends in outcomes like crime and incarceration rates to evaluate what effect it may be having. To do this, a linear model was created based on pre-1994 statistics (i.e., before the VCCLEA was passed). Outcome statistics were predicted for post 1994 and compared to actual statistics reported during those years. The results are below.", 
 									style={'font-size': '14px', 'text-align': 'left'}
 								),
 								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
+							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=4)
+						], style={'border': 'none'}),
+						html.Tr([
 							html.Td([
 								html.Label(['Outcome:'])
 							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
 							html.Td([
 								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
+							], style={'border': 'none', 'padding': '1px'}),
 							html.Td([
-								html.Label(['Sentencing structure:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
+								html.Label('')
+							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
+							html.Td([
+								html.Label([''])
+							], style={'border': 'none', 'padding': '1px'})
 						], style={'border': 'none'}),
 						html.Tr([
 							html.Td([
@@ -271,270 +373,58 @@ app.layout = html.Div(
 									options=populate_dd('Outcome', '.'), 
 									value='inc_rate', 
 									placeholder='Select an outcome variable', 
-									id='dd_outcome_ss', 
+									id='dd_outcome_tiseff', 
 									style={'width': '400px', 'font-size': '12px'}
 								)
 							], style={'border': 'none', 'padding': '0px'}),
 							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Sentencing', 'Sentencing structure'), 
-									value='pre_guid', 
-									placeholder='Select a variable', 
-									id='dd_indep_ss', 
-									style={'width': '400px', 'font-size': '12px'}
+								dcc.Checklist(
+									options={'1': 'Show mean annual values'},
+									value=[],
+									id='chk_mean',
+									style={'font-size': '14px'}
 								)
-							], style={'border': 'none', 'padding': '0px'})
+							], style={'border': 'none', 'padding': '0px'}, colSpan=2),
+							html.Td([
+								html.Label([''])
+							], style={'border': 'none', 'padding': '1px'})
 						], style={'border': 'none', 'padding': '0px'}),
 						html.Tr([
 							html.Td([
-								dcc.Graph(id='gr_ss', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
+								dcc.Graph(id='gr_tiseff', style={'width': '500px'})
+							], style={'border': 'none', 'padding': '0px'}, colSpan=2),
+							html.Td([
+								dcc.Graph(id='map_tiseff', style={'width': '500px'})
+							], style={'border': 'none', 'padding': '0px'}, colSpan=2)
 						], style={'border': 'none', 'padding': '0px'}),  #tr
 						html.Tr([
 							html.Td([
-								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),
-
-					############################
-					# Demographics
-					############################
-					html.Table([
-						html.Tr([
-							html.Td([
-								html.P('Other Factors', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
-								html.P("Obviously this is a complex issue with a number of factors at play, ranging from socio-economic factors to spending on law enforcement. We'll examine some of these influencing factors.", 
+								html.P("As seen above, the predicted incarceration rate without TIS laws is significantly lower than the actual rate. This seems to counter the prediction that prison admissions would have been higher absent TIS laws, but it is likely that this is simply a reflection of the growing overall population. Overall crime rates seem unaffected by TIS, while violent crime rate was predicted to have been higher without TIS. Since TIS mostly applies to violent offenses, this would seem to indicate it is at least partially working.", 
 									style={'font-size': '14px', 'text-align': 'left'}
 								),
-								html.Img(src=imgPath + 'img_demo.jpg', height='200px'),
-								html.P('Demographics', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("Crime and incarceration rates are often linked to demographic factors such as population rates, the relative number of people living in major metropolitan areas, and the proportion of young people living in the state. As such, these factors should be considered as control variables in any forecasting model that is built. As shown below, crime and incarceration rates are, notably, heavily influenced by various demographic factors. Perhaps unexpectedly, there is a strong correlation between crime rate and the number of people aged 25 to 34, while states having high percentages of people aged 18-24 exhibit and inverse relationship to most outcome variables.", 
-									style={'font-size': '14px', 'text-align': 'left'}
-								),
-								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
-							html.Td([
-								html.Label(['Outcome:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								html.Label(['Demographics:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
+							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=4)
 						], style={'border': 'none'}),
 						html.Tr([
 							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Outcome', '.'), 
-									value='inc_rate', 
-									placeholder='Select an outcome variable', 
-									id='dd_outcome_demo', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Control', 'Demographics'), 
-									value='pop_l1', 
-									placeholder='Select a variable', 
-									id='dd_indep_demo', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'})
-						], style={'border': 'none', 'padding': '0px'}),  # tr
-						html.Tr([
-							html.Td([
-								dcc.Graph(id='gr_demo', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),  #tr
-						html.Tr([
-							html.Td([
 								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
+							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=4)
 						], style={'border': 'none', 'padding': '0px'}),
-
-						############################
-						# Economy
-						############################
 						html.Tr([
 							html.Td([
-								html.Img(src=imgPath + 'img_econ.jpg', height='200px'),
-								html.P('Economy', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("Along with demographic factors, economic indicators also influence incarceration rates. This is especially apparent when comparing outcome variables against the Gini coefficient--a value that signifies how much a state's income distribution deviates from an equal distribution. Lower values of Gini coefficient indicate a more equal distribution. Surprisingly, crime rates also trended positively with per capita income, although it is likely that states with higher incomes also have higher Gini rates.", 
-									style={'font-size': '14px', 'text-align': 'left'}
-								),
-								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
-							html.Td([
-								html.Label(['Outcome:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								html.Label(['Economy:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
+								html.P('References', style={'font-size': '16px', 'font-weight': 'bold', 'text-align': 'left'}),
+								html.P(children=["Stemen, D. ", html.I("Impact of State Sentencing Policies on Incarceration Rates in the United States, 1975-2002 (ICPSR 4456)."), " (2007, September 27). Inter-university Consortium for Political and Social Research. https://www.icpsr.umich.edu/web/NACJD/studies/4456."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=["Ditton, P. Wilson, D. & BJS Statisticians. ", html.I("Truth in Sentencing in State Prisons."), " (1999, January). Bureau of Justice. https://bjs.ojp.gov/content/pub/pdf/tssp.pdf."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=["Shorey, J. ", html.I("Truth in Sentencing Overview & Laws."), " (2022, May 4). Study.com. https://study.com/learn/lesson/truth-in-sentencing-overview-laws.html."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=[html.I("State Good Time and Earned Time Laws (2021, June 11)."), " National Conference of State Legislatures. https://www.ncsl.org/civil-and-criminal-justice/state-good-time-and-earned-time-laws."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=[html.I("Know More: Truth-in-Sentencing."), " (2020). Restore Justice Foundation. https://www.restorejustice.org/about-us/resources/know-more/know-more-truth-in-sentencing/."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=[html.I("Federal Sentencing Guidelines: Background, Legal Analysis, and Policy Options."), " (2009, March 16). EveryCRSReport. https://www.everycrsreport.com/reports/RL32766.html."], style={'font-size': '12px', 'text-align': 'left'}),
+								html.P(children=[html.I("Metadata Glossary."), " (2023). World Bank, https://databank.worldbank.org/metadataglossary/gender-statistics/series/SI.POV.GINI."], style={'font-size': '12px', 'text-align': 'left'})
+							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=4)
 						], style={'border': 'none'}),
 						html.Tr([
 							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Outcome', '.'), 
-									value='inc_rate', 
-									placeholder='Select an outcome variable', 
-									id='dd_outcome_econ', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Control', 'Economy'), 
-									value='incpc_l1', 
-									placeholder='Select a variable', 
-									id='dd_indep_econ', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'})
-						], style={'border': 'none', 'padding': '0px'}),
-						html.Tr([
-							html.Td([
-								dcc.Graph(id='gr_econ', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),  #tr
-						html.Tr([
-							html.Td([
 								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),
-						html.Tr([
-							html.Td([
-								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),
-
-						############################
-						# Society
-						############################
-						html.Tr([
-							html.Td([
-								html.Img(src=imgPath + 'img_soc.jpg', height='200px'),
-								html.P('Society', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("Conventional wisdom would seem to indicate that states having more conservative populations--and, therefore, more conservative government and societal ideologies--would also experience higher incarceration rates and lower crime rates. However, some key indicators would suggest otherwise. Notably, there didn't seem to be any significant difference in incarceration rates in states having Republican governors or those in which a high proportion of the population adhere to a fundamentalist religion.", 
-									style={'font-size': '14px', 'text-align': 'left'}
-								),
-								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
-							html.Td([
-								html.Label(['Outcome:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								html.Label(['Society:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
-						], style={'border': 'none'}),
-						html.Tr([
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Outcome', '.'), 
-									value='inc_rate', 
-									placeholder='Select an outcome variable', 
-									id='dd_outcome_soc', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Control', 'Society'), 
-									value='religion', 
-									placeholder='Select a variable', 
-									id='dd_indep_soc', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'})
-						], style={'border': 'none', 'padding': '0px'}),
-						html.Tr([
-							html.Td([
-								dcc.Graph(id='gr_soc', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),  #tr
-						html.Tr([
-							html.Td([
-								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),
-
-						############################
-						# Corrections
-						############################
-						html.Tr([
-							html.Td([
-								html.Img(src=imgPath + 'img_corr.jpg', height='200px'),
-								html.P('Corrections', style={'font-size': '16px', 'font-weight': 'bold', 'text-decoration': 'underline', 'text-align': 'left'}),
-								html.P("It isn't surprising that any statistic that measures crime or incarceration rate would correlate to higher expenditures on corrections and law enforcement. Of course, one couldn't conclude that law enforcement was the *cause* of criminal activity. Those with a favourable outlook of the criminal justice system might be inclined to conclude that that the more money spent, the more crime is detected and mitigated, while those critical of the law enforcement might have the opposite take--that the police are overly vigilant and exercise a greater authority than warranted. In either case, the statistics show an obvious correlation between law enforcement spending and rates of crime and incarceration.", 
-									style={'font-size': '14px', 'text-align': 'left'}
-								),
-								html.Br()
-							], style={'text-align': 'left', 'border': 'none', 'padding': '1px', 'height': '40px', 'text-align': 'center'}, colSpan=3)
-						], style={'border': 'none'}),						html.Tr([
-							html.Td([
-								html.Label(['Outcome:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								html.Label(['Corrections:'])
-							], style={'font-weight': 'bold', 'font-size': '12px', 'border': 'none', 'padding': '0px'})
-						], style={'border': 'none'}),
-						html.Tr([
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Outcome', '.'), 
-									value='inc_rate', 
-									placeholder='Select an outcome variable', 
-									id='dd_outcome_corr', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'}),
-							html.Td([
-								html.Label([''])
-							], style={'width': '40px', 'border': 'none', 'padding': '1px'}),
-							html.Td([
-								dcc.Dropdown(
-									options=populate_dd('Control', 'Corrections'), 
-									value='expcorr_', 
-									placeholder='Select a variable', 
-									id='dd_indep_corr', 
-									style={'width': '400px', 'font-size': '12px'}
-								)
-							], style={'border': 'none', 'padding': '0px'})
-						], style={'border': 'none', 'padding': '0px'}),
-						html.Tr([
-							html.Td([
-								dcc.Graph(id='gr_corr', style={'width': '800px'})
-							], style={'border': 'none', 'padding': '0px'}, colSpan=3)
-						], style={'border': 'none', 'padding': '0px'}),  #tr
-						html.Tr([
-							html.Td([
-								html.Hr()
-							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=3)
+							], style={'font-size': '14px', 'border': 'none', 'padding': '1px', 'height': '40px'}, colSpan=4)
 						], style={'border': 'none', 'padding': '0px'})
 
 					############################
@@ -545,7 +435,7 @@ app.layout = html.Div(
 			], style={'border': 'none', 'padding': '0px'}),
 		], style={'border-collapse': 'collapse', 'padding': '0px', 'border': 'none'}),
 		html.Div(id='dummy_div')  # dummy div to signal app to load data
-	], style={'margin': 'auto', 'width': '50%', 'padding': '10px'}
+	], style={'margin': 'auto', 'width': '60%', 'padding': '10px'}
 )
 
 #-----------------------------------------------------
@@ -555,7 +445,6 @@ app.layout = html.Div(
 	Output('gr_map1', 'figure'),
 	Output('gr_map2', 'figure'),
 	Output('gr_map3', 'figure'),
-	Output('lbl_map_title', 'children'),
 	Input('dummy_div', 'id'),
 	Input('sl_year', 'value'),
 	prevent_initial_call=False
@@ -570,14 +459,14 @@ def update_map1(dummy_div, sl_year):
 	fig1 = px.choropleth(dfplot, locations='state_ab', locationmode='USA-states', scope='usa', color='tiss', color_discrete_map={'no': 'cornsilk', 'yes': 'cadetblue'}, width=500)
 	fig1.update_layout(
 		plot_bgcolor='white',
-		title={'text': 'Truth-in-Sentencing Policy - ' + str(sl_year), 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9}
+		title={'text': 'Truth-in-Sentencing Policy - ' + str(sl_year), 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9, 'font': {'family': 'Calibri', 'size': 18}}
 	)
 
 	# Display map2 - aggregated presumptive guidelines
 	fig2 = px.choropleth(dfplot, locations='state_ab', locationmode='USA-states', scope='usa', color='tisviol_agg', color_discrete_map={'no': 'cornsilk', 'yes': 'cadetblue'}, width=500)
 	fig2.update_layout(
 		plot_bgcolor='white',
-		title={'text': 'Minimum sentence required for violent crime - ' + str(sl_year), 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9}
+		title={'text': 'Mandatory sentencing for violent crime - ' + str(sl_year), 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9, 'font': {'family': 'Calibri', 'size': 18}}
 	)
 
 	# Display map3 - mean tisp
@@ -598,13 +487,13 @@ def update_map1(dummy_div, sl_year):
 	fig3 = px.bar(dfplot_mean, orientation='h', x='tisp', y='pre_par', height=180, width=600)
 	fig3.update_layout(
 		plot_bgcolor='white',
-		title={'text': 'Mean % of sentence required (by determinate sentencing) - ' + str(sl_year) , 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9},
+		title={'text': 'Mean % of sentence required (by determinate sentencing) - ' + str(sl_year) , 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9, 'font': {'family': 'Calibri', 'size': 18}},
 		yaxis={'title': '', 'visible': True, 'showticklabels': True},
 		xaxis={'title': '', 'range': [0, 100]}
 	)
 
 	# Return
-	return fig1, fig2, fig3, 'Truth-in-Sentencing Policies - ' + str(sl_year)
+	return fig1, fig2, fig3
 
 """
 # Callback functions for play/stop button
@@ -651,89 +540,97 @@ def animate_map1(sl_year, ani_map):
 
 #-----------------------------------------------------
 
-# Callback functions to update tis graph
+# Callback functions to update dynamic options
 @app.callback(
-	Output('gr_tis', 'figure'),
-	Input('dd_outcome_tis', 'value'),
-	Input('dd_indep_tis', 'value'),
+	Output('img_dyn', 'src'),
+	Output('dd_indep_dyn', 'options'),
+	Output('p_title_dyn', 'children'),
+	Output('p_text_dyn', 'children'),
+	Output('lbl_dyn', 'children'),
+	Input('dd_cat', 'value'),
 	prevent_initial_call=False
 )
-def update_gr_tis(outcome_var, indep_var):
+def update_dyn_options(dd_cat):
 	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
+		ser = dfcat[dfcat['title'] == dd_cat]
+		src = imgPath + ser['img'].values[0] + '.jpg'
+		d = populate_dd(ser['cat'].values[0], ser['subcat'].values[0])
+		ttl = ser['title'].values[0]
+		txt = ser['text'].values[0]
+		lbl = ser['label'].values[0]
+		return src, d, ttl, txt, lbl
 	except:
+		return '', {}, '', '', ''
+
+# Callback functions to update dynamic graphs
+@app.callback(
+	Output('gr_dyn', 'figure'),
+	Output('map_dyn', 'figure'),
+	Output('chk_dyn', 'options'),
+	Input('dd_outcome_dyn', 'value'),
+	Input('dd_indep_dyn', 'value'),
+	Input('chk_dyn', 'value'),
+	prevent_initial_call=False
+)
+def update_dyn_gr(outcome_var, indep_var, chk):
+	try:
+		r1, r2, chk = update_gr_general(outcome_var, indep_var, chk)
+		return r1, r2, chk
+	except:
+		return {}, {}, {}
+
+# Callback functions to update tis effect graphs
+@app.callback(
+	Output('gr_tiseff', 'figure'),
+	Output('map_tiseff', 'figure'),
+	Input('dd_outcome_tiseff', 'value'),
+	Input('chk_mean', 'value'),
+	prevent_initial_call=False
+)
+def update_gr_tiseff(outcome_var, chk_mean):
+
+	if outcome_var is None:
+		print('returning empty dict')
 		return {}
 
-# Callback functions to update demographics graph
-@app.callback(
-	Output('gr_demo', 'figure'),
-	Input('dd_outcome_demo', 'value'),
-	Input('dd_indep_demo', 'value'),
-	prevent_initial_call=False
-)
-def update_gr_demo(outcome_var, indep_var):
-	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
-	except:
-		return {}
+	# Fetch data
+	dfplot1 = dfpred
 
-# Callback functions to update economy graph
-@app.callback(
-	Output('gr_econ', 'figure'),
-	Input('dd_outcome_econ', 'value'),
-	Input('dd_indep_econ', 'value'),
-	prevent_initial_call=False
-)
-def update_gr_econ(outcome_var, indep_var):
-	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
-	except:
-		return {}
+	# Plot
+	if len(chk_mean) > 0:
 
-# Callback functions to update society graph
-@app.callback(
-	Output('gr_soc', 'figure'),
-	Input('dd_outcome_soc', 'value'),
-	Input('dd_indep_soc', 'value'),
-	prevent_initial_call=False
-)
-def update_gr_soc(outcome_var, indep_var):
-	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
-	except:
-		return {}
+		# Mean
+		dfplot2 = dfplot1.groupby(['year', 'val_type'], as_index=False).agg({outcome_var: 'mean'})
+		fig1 = px.line(dfplot2, x='year', y=outcome_var, color='val_type', width=600, height=400, markers=True)
 
-# Callback functions to update economy graph
-@app.callback(
-	Output('gr_corr', 'figure'),
-	Input('dd_outcome_corr', 'value'),
-	Input('dd_indep_corr', 'value'),
-	prevent_initial_call=False
-)
-def update_gr_corr(outcome_var, indep_var):
-	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
-	except:
-		return {}
+	else:
 
-# Callback functions to update sentence structure graph
-@app.callback(
-	Output('gr_ss', 'figure'),
-	Input('dd_outcome_ss', 'value'),
-	Input('dd_indep_ss', 'value'),
-	prevent_initial_call=False
-)
-def update_gr_ss(outcome_var, indep_var):
-	try:
-		r = update_gr_general(outcome_var, indep_var)
-		return r
-	except:
-		return {}
+		# All values
+		fig1 = px.strip(dfplot1, x='year', y=outcome_var, color='val_type', width=600, height=400, stripmode='group')
+
+	# Axes
+	fig1.update_xaxes(mirror=False, showline=True, ticks='outside', linecolor='black', gridcolor='lightgrey', title='year')
+	fig1.update_yaxes(mirror=False, showline=True, ticks='outside', linecolor='black', gridcolor='lightgrey', title=dfvar[dfvar['var'] == outcome_var]['descr'].values[0])
+	fig1.update_layout(title='', plot_bgcolor='white')
+
+	# Choose year for map; some vars are NaN for 2002
+	mapyr = 2002
+	if outcome_var == 'adm_100k' or outcome_var == 'ncourtc' or outcome_var == 'court_10':
+		mapyr = 1996
+	dfplot1 = dfplot1[dfplot1['year'] == mapyr]
+
+	# Map
+	if dfvar[dfvar['var'] == outcome_var]['vartype'].values[0] == 'cat':
+		fig2 = px.choropleth(dfplot1, locations='state_ab', locationmode='USA-states', scope='usa', color=outcome_var, color_discrete_sequence=['cadetblue', 'cornsilk'], width=500)
+	else:
+		fig2 = px.choropleth(dfplot1, locations='state_ab', locationmode='USA-states', scope='usa', color=outcome_var, color_continuous_scale='deep', width=500)
+	fig2.update_layout(
+		plot_bgcolor='white',
+		title={'text': dfvar[dfvar['var'] == outcome_var]['descr'].values[0] + ' - ' + str(mapyr), 'xanchor': 'center', 'yanchor': 'top', 'x': 0.5, 'y': 0.9, 'font': {'family': 'Calibri', 'size': 18}}
+	)
+
+	# Return plot
+	return fig1, fig2
 
 #-----------------------------------------------------
 
@@ -741,3 +638,4 @@ def update_gr_ss(outcome_var, indep_var):
 if __name__ == "__main__":
 	app.run_server(debug=True, processes=1, threaded=True)
 
+#-----------------------------------------------------

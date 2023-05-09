@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(plotly)
 library(gridExtra)
+library(MASS)
 ```
 
 ## Introduction
@@ -46,7 +47,7 @@ df2 = read.csv('data/04456-0002-Data.tsv', sep='\t')
 print("")
 print("Summary - outcome vars")
 summary(df1 %>%
-    select(
+    dplyr::select(
         inc_rate,
         lag_incr,
         d_inc_ra,
@@ -105,13 +106,15 @@ print(paste('pro_crim', 'missing',0))
 ```{r}
 
 # Histograms - incarceration rate
-fig1 <- plot_ly(type='histogram', x=df1$inc_rate, nbinsx=40) %>%
+fig <- plot_ly(type='histogram', x=df1$inc_rate, nbinsx=40) %>%
     layout(title='Incarceration Rate', xaxis=list(title='Incarceration rate per 100,000 residents'))
-fig2 <- plot_ly(type='histogram', x=df1[df1$lag_incr != 999, 'lag_incr'], nbinsx=40) %>%
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$lag_incr != 999, 'lag_incr'], nbinsx=40) %>%
     layout(title='Lagged Incarceration Rate', xaxis=list(title='Incarceration rate per 100,000 residents (lagged one year)'))
-fig3 <- plot_ly(type='histogram', x=df1[df1$d_inc_ra != 999, 'd_inc_ra'], nbinsx=40) %>%
+fig
+fig <- plot_ly(type='histogram', x=df1[df1$d_inc_ra != 999, 'd_inc_ra'], nbinsx=40) %>%
     layout(title='Incarceration Rate Difference', xaxis=list(title='Difference in incarceration rate (t1 - t0)'))
-grid.arrange(fig1, fig2, fig3)
+fig
 
 ```
 
@@ -170,19 +173,19 @@ fig
 ```{r}
 
 # Factor
-df1$state_na = factor(df1$state_na)
+#df1$state_na = factor(df1$state_na)
 df1$south = factor(df1$south)
 df1$west = factor(df1$west)
 df1$east = factor(df1$east)
 df1$midwest = factor(df1$midwest)
-df1$year = factor(df1$year)
+#df1$year = factor(df1$year)
 df1$govern = factor(df1$govern)
 
 # Summary - control vars
 print("")
 print("Summary - control vars")
 summary(df1 %>%
-    select(
+    dplyr::select(
         state_na,
         south,
         west,
@@ -317,7 +320,7 @@ df1$pre_rec_ <- factor(df1$pre_rec_)
 print("")
 print("Summary - sentencing vars")
 summary(df1 %>%
-    select(
+    dplyr::select(
         tisp,
         tiss,
         tisviol,
@@ -385,7 +388,7 @@ fig
 print("")
 print("Summary - enhancement vars")
 summary(df1 %>%
-    select(
+    dplyr::select(
         m1_weap,
         m2_prox,
         m3_offic,
@@ -406,7 +409,7 @@ summary(df1 %>%
 print("")
 print("Summary - mandatory sentences with weapon as trigger")
 summary(df1 %>%
-    select(
+    dplyr::select(
         m10_we1a,
         m11_we1b,
         m12_we1c,
@@ -442,7 +445,7 @@ summary(df1 %>%
 print("")
 print("Summary - mandatory sentences with drugs as trigger")
 summary(df1 %>%
-    select(
+    dplyr::select(
         m34_dr1a,
         m35_dr1b,
         m36_dr1c,
@@ -472,7 +475,7 @@ summary(df1 %>%
 print("")
 print("Summary - mandatory sentences with bodily harm as trigger")
 summary(df1 %>%
-    select(
+    dplyr::select(
         m52_vi1a,
         m53_vi1b,
         m54_vi1c,
@@ -545,7 +548,7 @@ Sentencing	Guidelines	pre_rec_	Presence of presumptive recommended sentences (as
 
 vars <- c('tiss', 'tisviol', 'pre_guid', 'pre_volg', 'pre_par', 'rec_sent', 'presum_s', 'pre_rec_')
 dfyr <- df1 %>%
-    select(year) %>%
+    dplyr::select(year) %>%
     group_by(year) %>%
     summarize() %>%
     ungroup()
@@ -605,6 +608,222 @@ df7b <- df1 %>%
     spread(key=pre_par, value=meantisp, sep='=')
 
 ```
+
+```{r}
+
+df1 %>%
+    ggplot() +
+    #geom_point(aes(x=year, y=inc_rate), stat='identity', color='black') +
+    #geom_point(aes(x=year, y=cri_l1 / 10), stat='identity', color='red') +
+    geom_jitter(aes(x=year, y=inc_rate), color='black', width=0.30) +
+    geom_jitter(aes(x=year, y=cri_l1 / 10), color='red', width=0.30) +
+    scale_y_continuous(name='inc_rate', sec.axis=sec_axis(~.*10, name='crime_rate')) +
+    theme_minimal()
+
+df1 %>%
+    group_by(year) %>%
+    summarize(mean_inc_rate=mean(inc_rate), mean_crime_rate=mean(cri_l1)) %>%
+    ggplot() +
+    geom_point(aes(x=year, y=mean_inc_rate), stat='identity', color='black') +
+    geom_point(aes(x=year, y=mean_crime_rate/10), stat='identity', color='red') +
+    scale_y_continuous(name='inc_rate', sec.axis=sec_axis(~.*10, name='crime_rate')) +
+    theme_minimal()
+
+```
+
+```{r}
+
+predictionFunc <- function(fld) {
+    
+    # Working copy of df, remove generated vars
+    df1a <- df1 %>%
+        mutate(year=as.numeric(as.character(year))) %>%
+        dplyr::select(-case_id, -state_id, -lag_incr) %>%
+        dplyr::select(!starts_with('d_')) %>%
+        dplyr::select(!starts_with('cop_')) %>%
+        dplyr::select(!starts_with('welf_')) %>%
+        dplyr::select(!starts_with('unemp_')) %>%
+        dplyr::select(!starts_with('pov_')) %>%
+        dplyr::select(!starts_with('black_'))
+    df1a <- df1a[,1:148]
+    
+    # Replace missing values
+    for (i in 1:nrow(dfvar)) {
+        v <- dfvar[i, 'var']
+        m <- dfvar[i, 'missing']
+        #print(paste0(v, ': missing=', m))
+        if (v %in% colnames(df1a)) {
+            df1a[[v]] = ifelse(df1a[[v]]==m, NaN, eval(df1a[[v]]))
+        }
+    }
+    
+    # Choose only complete cases for the outcome var
+    df1a <- df1a[complete.cases(df1a[, c(fld)]),]
+    
+    # Omit columns with NaN
+    df1a <- df1a %>%
+        select_if(~ !any(is.na(.)))
+    
+    # Hypothetical -- no tis laws passed -- use values pre 1994
+    df1h <- df1a %>%
+        filter(year < 1994 & year > 1972)
+
+    # Predicted values
+    df1p <- df1a %>%
+        filter(year >= 1994) %>%
+        dplyr::select(-sym(fld))
+    
+    # Model using pre-1994 data
+    fm <- as.formula(paste(fld, '~ .'))
+    lmod_full <- lm(fm, data=df1h, na.action=na.omit)
+    #summary(lmod_full)
+    lmod_step1 <- stepAIC(lmod_full, direction='forward', trace=T)
+    summary(lmod_step1)
+    df1p[fld] <- predict(lmod_step1, newdata=df1p)
+
+    # Recombine data
+    df1h <- df1h %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='actual_pre-1994')
+    dftmp1a <- df1a %>%
+        filter(year >= 1994) %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='actual_post-1994')
+    df1h <- rbind(df1h, dftmp1a)
+    df1p <- df1p %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='predicted_post-1994')
+    df1b <- rbind(df1h, df1p)
+    
+    # Return
+    return(df1b)
+
+}
+
+# Predictions
+dfpred_tmp <- predictionFunc('inc_rate')  # incarceration rate
+dfpred <- dfpred_tmp
+dfpred_tmp <- predictionFunc('cri_l1')  # crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('admissio')  # prison admissions
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('adm_100k')  # prison admissions per 100k residents
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('ncourtc')  # new court commitments
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('court_10')  # court commitments per 100k residents
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('drug_arr')  # drug arrests per capita
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('pro_drug')  # drug arrests 3-yr avg
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('vio_l1')  # violent crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('pro_crim')  # property crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+
+# Save to file
+write.csv(dfpred, 'C:/Users/micha/Box Sync/cuny/608-vis-analytics/project/data/predicted.csv')
+
+```
+
+
+```{r}
+
+# Incarceration rate
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=inc_rate, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(inc_rate), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+# Crime rate
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=cri_l1, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(cri_l1), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_jitter(width=1.25) +
+    geom_line() +
+    theme_minimal() +
+    ylim(0, 6000)
+
+# Prison admissions
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=admissio, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(admissio), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+# Prison admissions per 100k residents
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=adm_100k, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(adm_100k), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+# Prison admissions per 100k residents
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=ncourtc, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(ncourtc), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+# Violent crime
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=vio_l1, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(vio_l1), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+# Property crime
+dfpred %>%
+    ggplot() +
+    geom_jitter(aes(x=year, y=pro_crim, color=val_type), width=0.30) +
+    theme_minimal()
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(pro_crim), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal()
+
+```
+
 
 ## References
 
