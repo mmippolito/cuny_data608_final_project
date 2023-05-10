@@ -14,7 +14,7 @@ import time
 #-----------------------------------------------------
 
 # Init vars
-offline = True
+offline = False
 if offline:
 	url_vars = 'data/vars.tsv'
 	url_abbr = 'data/state_abbr.csv'
@@ -246,7 +246,7 @@ app.layout = html.Div(
 							html.Td([
 								html.Img(src=imgPath + 'img_tis.jpg', height='200px'),
 								html.P('Pros and "Cons"', style={'font-size': '21px', 'font-weight': 'bold', 'text-align': 'left'}),
-								html.P("Arguments leading to passage of the VCCEA included that truth in sentencing (TIS) laws would deter future criminal behavior, would render justice to the perpetrator for the crime commited, and that time served would theoretically be unbiased and no longer at the whim of a parole board. Opponents of TIS argue that TIS leads to prison overcrowding, that the cost of incarcerating prisoners longer could be better spent on crime prevention programs, that it disincentivizes good behavior, and that it in fact does not serve as a deterrent to future crime. Further, it leaves judges no room in weighing extenuating factors when rendering a sentence.", 
+								html.P("Arguments leading to passage of the VCCEA included that truth in sentencing (TIS) laws would deter future criminal behavior, would render justice to the perpetrator for the crime commited, and that time served would theoretically be unbiased and no longer at the whim of a parole board. Opponents of TIS argue that TIS leads to prison overcrowding, that the cost of incarcerating prisoners longer could be better spent on crime prevention programs, that it disincentivizes good behavior, and that it in fact does not serve as a deterrent to future crime. Further, it leaves judges no room in weighing extenuating factors when rendering a sentence. And in a criminal justice system that many accuse of being implicitly biased, the net result could simply mean more underrepresented people are spending more time behind bars.", 
 									style={'font-size': '14px', 'text-align': 'left'}
 								),
 								html.Br()
