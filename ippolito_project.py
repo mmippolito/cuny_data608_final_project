@@ -1,6 +1,5 @@
 # Load libraries
 from dash import Dash, dcc, html, Input, Output
-import dash_daq as daq
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -33,6 +32,7 @@ else:
 # Set dash app
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 app = Dash(__name__, external_stylesheets=external_stylesheets)
+server = app.server
 
 #-----------------------------------------------------
 

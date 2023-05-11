@@ -1,0 +1,267 @@
+---
+title: "Effect of Truth-in-Sentencing on Incarceration Rate"
+author: "Michael Ippolito"
+date: "2023-03-26"
+output:
+  pdf_document: default
+  html_document: default
+subtitle: CUNY Data608 Final Project
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(MASS)
+```
+
+## Final Project Writeup
+
+In my project, I explored the effects of truth-in-sentencing (TIS) laws on incarceration rates and rates of violent crime. I chose to use a data source from the National Archive of Criminal Justice Data at the University of Michigan, collected from 1972 to 2002 as part of a study specifically designed to evaluate the effects of truth-in-sentencing.
+
+The data included 298 variables and 550 observations (11 years of data for each of the 50 US states) with a very low proportion of missing values. I limited my outcome variables to incarceration rate and violent crime rate. The remaining variables included a wide range of factors that may influence incarceration and crime rates, such as the presence of TIS laws, whether determinate or indeterminate sentencing was in use, so-called "enhancements" (extra prison time) for certain offenses, and the percentage of their sentences offenders are required to serve. The data also includes control variables such as economic factors (poverty rate and Gini coefficient), social factors (whether the state has a Republican governor and what percentage of the population observe a fundamentalist religion), and how much is spent per capita on corrections and law enforcement.
+
+What I observed from the data is that TIS can be interpreted to be either working or not working, depending on your ideology. If the goal is to reduce violent crime rates, it does seem to be having that effect:
+
+```{r echo=FALSE, include=FALSE}
+
+# Read data
+dfvar = read.csv('data/vars.tsv', sep='\t')
+dfabbr = read.csv('data/state_abbr.csv')
+df1 = read.csv('data/04456-0001-Data.tsv', sep='\t')
+df2 = read.csv('data/04456-0002-Data.tsv', sep='\t')
+
+```
+
+```{r echo=FALSE, include=FALSE}
+
+# Factor
+#df1$state_na = factor(df1$state_na)
+df1$south = factor(df1$south)
+df1$west = factor(df1$west)
+df1$east = factor(df1$east)
+df1$midwest = factor(df1$midwest)
+#df1$year = factor(df1$year)
+df1$govern = factor(df1$govern)
+df1$tiss = factor(df1$tiss)
+df1$tisviol = factor(df1$tisviol)
+df1$pre_guid <- factor(df1$pre_guid)
+df1$pre_volg <- factor(df1$pre_volg)
+df1$pre_par <- factor(df1$pre_par)
+df1$rec_sent <- factor(df1$rec_sent)
+df1$presum_s <- factor(df1$presum_s)
+df1$pre_rec_ <- factor(df1$pre_rec_)
+
+```
+
+```{r echo=FALSE, include=FALSE}
+
+vars <- c('tiss', 'tisviol', 'pre_guid', 'pre_volg', 'pre_par', 'rec_sent', 'presum_s', 'pre_rec_')
+dfyr <- df1 %>%
+    dplyr::select(year) %>%
+    group_by(year) %>%
+    summarize() %>%
+    ungroup()
+df3 <- dfyr
+
+for (v in vars) {
+
+    dftmp <- df1[df1[v] == 1,]
+    dftmp <- dftmp %>%
+        #filter(v == 1) %>%
+        group_by(year) %>%
+        summarize(n=n()) %>%
+        ungroup()
+    dftmp[v] = dftmp['n']
+    dftmp <- dftmp %>% dplyr::select(-n)
+    df3 <- df3 %>%
+       merge(dftmp, by='year', all.x=T)
+}
+df3 <- gather(df3, key='stat', val='val', -year)
+
+df3 %>%
+    filter(year !=1972) %>%
+    ggplot() +
+    geom_bar(aes(x=year, y=val, fill=stat), stat='identity', position = 'dodge') +
+    theme_minimal()
+
+df4 <- df1 %>%
+    group_by(year, tiss) %>%
+    summarize(n=n(), mean_tisp=mean(tisp))
+
+df5 <- df1 %>%
+    filter(year == 1999) %>%
+    dplyr::select(state_na, tiss, tisviol, tisp, pre_guid, pre_volg, pre_par, rec_sent, presum_s, pre_rec_)
+
+df6 <- df1 %>%
+    mutate(fed=ifelse(tisp>=85, 1, 0)) %>%
+    group_by(year, fed) %>%
+    summarize(n=n()) %>%
+    ungroup() %>%
+    spread(key=fed, value=n)
+
+df7 <- df1 %>%
+    mutate(tmpviol=ifelse(m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1, 1, 0)) %>%
+    group_by(year, tmpviol) %>%
+    summarize(n=n()) %>%
+    ungroup() %>%
+    spread(key=tmpviol, value=n, sep='=')
+
+df7b <- df1 %>%
+    #filter(tisp != 0) %>%
+    mutate(tmpviol=ifelse(m10_we1a==1 | m16_we2a==1 | m22_we3a==1 | m28_we4a==1 | m52_vi1a==1 | m58_vi2a==1, 1, 0)) %>%
+    #mutate(tmpmo=mean(m15_we1f) + mean(m21_we2f) + mean(m27_we3f) + mean(m33_we4f) + mean(m57_vi1f) + mean(m63_vi2f)) %>%
+    mutate(tmpagg=ifelse(pre_guid==1 | pre_volg==1 | pre_par==1 | rec_sent==1 | presum_s==1 | pre_rec_==1, 1, 0)) %>%
+    group_by(year, pre_par) %>%
+    summarize(meantisp=mean(tisp), .groups='keep') %>%
+    ungroup() %>%
+    spread(key=pre_par, value=meantisp, sep='=')
+
+```
+
+
+```{r echo=FALSE, include=FALSE}
+
+predictionFunc <- function(fld) {
+    
+    # Working copy of df, remove generated vars
+    df1a <- df1 %>%
+        mutate(year=as.numeric(as.character(year))) %>%
+        dplyr::select(-case_id, -state_id, -lag_incr) %>%
+        dplyr::select(!starts_with('d_')) %>%
+        dplyr::select(!starts_with('cop_')) %>%
+        dplyr::select(!starts_with('welf_')) %>%
+        dplyr::select(!starts_with('unemp_')) %>%
+        dplyr::select(!starts_with('pov_')) %>%
+        dplyr::select(!starts_with('black_'))
+    df1a <- df1a[,1:148]
+    
+    # Replace missing values
+    for (i in 1:nrow(dfvar)) {
+        v <- dfvar[i, 'var']
+        m <- dfvar[i, 'missing']
+        #print(paste0(v, ': missing=', m))
+        if (v %in% colnames(df1a)) {
+            df1a[[v]] = ifelse(df1a[[v]]==m, NaN, eval(df1a[[v]]))
+        }
+    }
+    
+    # Choose only complete cases for the outcome var
+    df1a <- df1a[complete.cases(df1a[, c(fld)]),]
+    
+    # Omit columns with NaN
+    df1a <- df1a %>%
+        select_if(~ !any(is.na(.)))
+    
+    # Hypothetical -- no tis laws passed -- use values pre 1994
+    df1h <- df1a %>%
+        filter(year < 1994 & year > 1972)
+
+    # Predicted values
+    df1p <- df1a %>%
+        filter(year >= 1994) %>%
+        dplyr::select(-sym(fld))
+    
+    # Model using pre-1994 data
+    fm <- as.formula(paste(fld, '~ .'))
+    lmod_full <- lm(fm, data=df1h, na.action=na.omit)
+    #summary(lmod_full)
+    lmod_step1 <- stepAIC(lmod_full, direction='forward', trace=T)
+    summary(lmod_step1)
+    df1p[fld] <- predict(lmod_step1, newdata=df1p)
+
+    # Recombine data
+    df1h <- df1h %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='actual_pre-1994')
+    dftmp1a <- df1a %>%
+        filter(year >= 1994) %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='actual_post-1994')
+    df1h <- rbind(df1h, dftmp1a)
+    df1p <- df1p %>%
+        dplyr::select(state_na, year, sym(fld)) %>%
+        mutate(val_type='predicted_post-1994')
+    df1b <- rbind(df1h, df1p)
+    
+    # Return
+    return(df1b)
+
+}
+
+# Predictions
+dfpred_tmp <- predictionFunc('inc_rate')  # incarceration rate
+dfpred <- dfpred_tmp
+dfpred_tmp <- predictionFunc('cri_l1')  # crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('admissio')  # prison admissions
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('adm_100k')  # prison admissions per 100k residents
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('ncourtc')  # new court commitments
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('court_10')  # court commitments per 100k residents
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('drug_arr')  # drug arrests per capita
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('pro_drug')  # drug arrests 3-yr avg
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('vio_l1')  # violent crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+dfpred_tmp <- predictionFunc('pro_crim')  # property crime rate
+dfpred <- dfpred %>% merge(dfpred_tmp, all.x=T)
+
+# Save to file
+write.csv(dfpred, 'C:/Users/micha/Box Sync/cuny/608-vis-analytics/project/data/predicted.csv')
+
+```
+
+```{r echo=FALSE, fig.height=3}
+
+# Violent crime
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(vio_l1), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal() +
+    ggtitle("Actual and predicted violent crime rates, pre- and post-1994")
+
+```
+
+But opponents of TIS point out that this is at the expense of growing the prison population; as the data shows, the incarceration rate seems to have climbed under TIS:
+
+```{r echo=FALSE, fig.height=3}
+
+# Incarceration rate
+dfpred %>%
+    group_by(year, val_type) %>%
+    summarize(mean_rate=mean(inc_rate), .groups='keep') %>%
+    ggplot(aes(x=year, y=mean_rate, color=val_type)) +
+    geom_point(stat='identity') +
+    geom_line() +
+    theme_minimal() +
+    ggtitle("Actual and predicted incarceration rates, pre- and post-1994")
+
+```
+
+So answering the question of whether TIS is working is challenging and may come down to perspective.
+
+Regardless of ideology, TIS is an important topic for not only those it directly touches but for society in general, as we ask what the "right" amount of law enforcement is and the cost of such enforcement in terms of both dollars and the number of people we send to prison.
+
+
+## References
+
+Stemen, D. _Impact of State Sentencing Policies on Incarceration Rates in the United States, 1975-2002 (ICPSR 4456)._ (2007, September 27). Inter-university Consortium for Political and Social Research. https://www.icpsr.umich.edu/web/NACJD/studies/4456
+
+Ditton, P., Wilson, D. & BJS Statisticians. _Truth in Sentencing in State Prisons._ (1999, January). Bureau of Justice. https://bjs.ojp.gov/content/pub/pdf/tssp.pdf
+
+Shorey, J. _Truth in Sentencing Overview & Laws._ (2022, May 4). Study.com. https://study.com/learn/lesson/truth-in-sentencing-overview-laws.html
+
+_State Good Time and Earned Time Laws (2021, June 11)._ National Conference of State Legislatures. https://www.ncsl.org/civil-and-criminal-justice/state-good-time-and-earned-time-laws
+
+_Know More: Truth-in-Sentencing._ (2020). Restore Justice Foundation. https://www.restorejustice.org/about-us/resources/know-more/know-more-truth-in-sentencing/
+
+_Federal Sentencing Guidelines: Background, Legal Analysis, and Policy Options_ (2009, March 16). EveryCRSReport. https://www.everycrsreport.com/reports/RL32766.html
+
+_Metadata Glossary_ (2023). World Bank, https://databank.worldbank.org/metadataglossary/gender-statistics/series/SI.POV.GINI.
